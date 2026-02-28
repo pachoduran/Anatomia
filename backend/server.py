@@ -1,4 +1,6 @@
 from fastapi import FastAPI, APIRouter, HTTPException
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
@@ -18,28 +20,14 @@ db = client[os.environ['DB_NAME']]
 app = FastAPI()
 api_router = APIRouter(prefix="/api")
 
-# ============================================
-# IMÁGENES DIFERENTES PARA CADA ZONA
-# Usando OpenClipArt y otras fuentes estables
-# ============================================
-IMAGES = {
-    # Cráneo - silueta de caballo con foco en cabeza
-    "craneo": "https://openclipart.org/image/400px/255836",
-    
-    # Columna vertebral - silueta lateral del caballo
-    "columna": "https://openclipart.org/image/400px/211621",
-    
-    # Tórax - otra vista del caballo
-    "torax": "https://openclipart.org/image/400px/169761",
-    
-    # Miembro anterior - caballo con énfasis en patas
-    "anterior": "https://cdn.iconscout.com/icon/premium/png-256-thumb/horse-skeleton-1-893895.png",
-    
-    # Miembro posterior - silueta de caballo
-    "posterior": "https://openclipart.org/image/400px/255836",
-}
+# Servir archivos estáticos desde /api/assets
+ASSETS_DIR = ROOT_DIR / "assets"
 
-# Datos de huesos organizados por región con IMÁGENES ESPECÍFICAS
+# URLs de imágenes - usando el servidor local
+# El backend corre en /api, así que las imágenes están en /api/assets/
+BASE_URL = "/api/assets"
+
+# DATOS DEL ESQUELETO - 205 huesos organizados
 SKELETON = {
     "axial": {
         "name": "Esqueleto Axial",
@@ -49,42 +37,38 @@ SKELETON = {
                 "name": "Cráneo y Cara",
                 "desc": "34 huesos del cráneo y cara",
                 "bones": 34,
-                "image": IMAGES["craneo"],  # IMAGEN DEL CRÁNEO
+                "image": f"{BASE_URL}/skeleton_full.jpg",
                 "questions": [
-                    {"id": "frontal", "name": "Hueso Frontal", "qty": 2, "desc": "Parte superior del cráneo, forma la frente", "x": 35, "y": 15, "color": "Rojo"},
-                    {"id": "parietal", "name": "Hueso Parietal", "qty": 2, "desc": "Parte superior-posterior del cráneo", "x": 55, "y": 20, "color": "Azul"},
-                    {"id": "temporal", "name": "Hueso Temporal", "qty": 2, "desc": "Lateral del cráneo, contiene el oído", "x": 65, "y": 35, "color": "Verde"},
-                    {"id": "occipital", "name": "Hueso Occipital", "qty": 1, "desc": "Parte posterior del cráneo", "x": 75, "y": 40, "color": "Amarillo"},
-                    {"id": "nasal", "name": "Hueso Nasal", "qty": 2, "desc": "Forma el puente de la nariz", "x": 15, "y": 30, "color": "Naranja"},
-                    {"id": "maxilar", "name": "Maxilar Superior", "qty": 2, "desc": "Contiene los dientes superiores", "x": 25, "y": 50, "color": "Morado"},
-                    {"id": "mandibula", "name": "Mandíbula", "qty": 2, "desc": "Hueso móvil inferior con dientes", "x": 40, "y": 75, "color": "Rojo"},
-                    {"id": "orbita", "name": "Órbita Ocular", "qty": 2, "desc": "Cavidad donde se aloja el ojo", "x": 30, "y": 35, "color": "Azul"},
+                    {"id": "frontal", "name": "Hueso Frontal", "qty": 2, "desc": "Parte superior del cráneo, etiquetado como 'Skull' en la imagen", "x": 8, "y": 20, "color": "Rojo"},
+                    {"id": "parietal", "name": "Hueso Parietal", "qty": 2, "desc": "Detrás del frontal, parte superior del cráneo", "x": 12, "y": 18, "color": "Azul"},
+                    {"id": "temporal", "name": "Hueso Temporal", "qty": 2, "desc": "Lateral del cráneo, cerca del oído", "x": 14, "y": 24, "color": "Verde"},
+                    {"id": "occipital", "name": "Hueso Occipital", "qty": 1, "desc": "Posterior del cráneo, conecta con Atlas", "x": 16, "y": 22, "color": "Amarillo"},
+                    {"id": "nasal", "name": "Hueso Nasal", "qty": 2, "desc": "Forma la nariz, parte anterior de la cabeza", "x": 5, "y": 24, "color": "Naranja"},
+                    {"id": "maxilar", "name": "Maxilar Superior", "qty": 2, "desc": "Contiene dientes superiores", "x": 8, "y": 32, "color": "Morado"},
+                    {"id": "mandibula", "name": "Mandíbula", "qty": 2, "desc": "Hueso móvil inferior, etiquetado como 'Jaw' en la imagen", "x": 12, "y": 38, "color": "Rojo"},
                 ]
             },
             "columna": {
                 "name": "Columna Vertebral",
-                "desc": "54 vértebras desde cuello hasta cola",
+                "desc": "54 vértebras del cuello a la cola",
                 "bones": 54,
-                "image": IMAGES["columna"],  # IMAGEN DE LA COLUMNA
+                "image": f"{BASE_URL}/skeleton_full.jpg",
                 "questions": [
-                    {"id": "atlas", "name": "Atlas (C1)", "qty": 1, "desc": "Primera vértebra cervical", "x": 12, "y": 28, "color": "Rojo"},
-                    {"id": "axis", "name": "Axis (C2)", "qty": 1, "desc": "Segunda vértebra cervical", "x": 15, "y": 30, "color": "Azul"},
-                    {"id": "cervicales", "name": "Vértebras Cervicales C3-C7", "qty": 5, "desc": "Vértebras del cuello", "x": 22, "y": 35, "color": "Verde"},
-                    {"id": "toracicas", "name": "Vértebras Torácicas T1-T18", "qty": 18, "desc": "Se articulan con las costillas", "x": 45, "y": 18, "color": "Amarillo"},
-                    {"id": "lumbares", "name": "Vértebras Lumbares L1-L6", "qty": 6, "desc": "Región del lomo", "x": 62, "y": 22, "color": "Naranja"},
-                    {"id": "sacro", "name": "Sacro", "qty": 5, "desc": "Vértebras fusionadas de la grupa", "x": 72, "y": 28, "color": "Morado"},
-                    {"id": "coccigeas", "name": "Vértebras Coccígeas", "qty": 18, "desc": "Forman la cola", "x": 88, "y": 35, "color": "Rojo"},
+                    {"id": "cervicales", "name": "Vértebras Cervicales (C1-C7)", "qty": 7, "desc": "Cuello del caballo, entre cabeza y cruz", "x": 22, "y": 28, "color": "Rojo"},
+                    {"id": "toracicas", "name": "Vértebras Torácicas (T1-T18)", "qty": 18, "desc": "Región del lomo con costillas, etiquetadas 'Thoracic vertebrae'", "x": 42, "y": 16, "color": "Azul"},
+                    {"id": "lumbares", "name": "Vértebras Lumbares (L1-L6)", "qty": 6, "desc": "Lomo posterior, etiquetadas 'Lumbar vertebrae'", "x": 58, "y": 20, "color": "Verde"},
+                    {"id": "sacro", "name": "Sacro (5 fusionadas)", "qty": 5, "desc": "Grupa, fusionadas con la pelvis, etiquetado 'Sacrum'", "x": 68, "y": 24, "color": "Amarillo"},
+                    {"id": "coccigeas", "name": "Vértebras Coccígeas", "qty": 18, "desc": "Cola del caballo, etiquetadas 'Coccygeal vertebrae'", "x": 85, "y": 30, "color": "Naranja"},
                 ]
             },
             "torax": {
                 "name": "Caja Torácica",
                 "desc": "Costillas y esternón - 37 huesos",
                 "bones": 37,
-                "image": IMAGES["torax"],  # IMAGEN DEL TÓRAX
+                "image": f"{BASE_URL}/skeleton_full.jpg",
                 "questions": [
-                    {"id": "costillas_v", "name": "Costillas Verdaderas", "qty": 16, "desc": "8 pares que se unen al esternón", "x": 38, "y": 45, "color": "Azul"},
-                    {"id": "costillas_f", "name": "Costillas Falsas", "qty": 20, "desc": "10 pares con unión indirecta", "x": 52, "y": 50, "color": "Verde"},
-                    {"id": "esternon", "name": "Esternón", "qty": 1, "desc": "Hueso del pecho", "x": 35, "y": 70, "color": "Rojo"},
+                    {"id": "costillas", "name": "Costillas (18 pares)", "qty": 36, "desc": "Protegen órganos vitales, etiquetadas 'Ribs'", "x": 42, "y": 42, "color": "Azul"},
+                    {"id": "esternon", "name": "Esternón", "qty": 1, "desc": "Hueso del pecho donde se unen las costillas", "x": 35, "y": 62, "color": "Rojo"},
                 ]
             }
         }
@@ -97,32 +81,30 @@ SKELETON = {
                 "name": "Miembro Anterior",
                 "desc": "Pata delantera - 40 huesos",
                 "bones": 40,
-                "image": IMAGES["anterior"],  # IMAGEN DE PATA DELANTERA
+                "image": f"{BASE_URL}/skeleton_full.jpg",
                 "questions": [
-                    {"id": "escapula", "name": "Escápula", "qty": 2, "desc": "Hueso del hombro", "x": 50, "y": 8, "color": "Rojo"},
-                    {"id": "humero", "name": "Húmero", "qty": 2, "desc": "Hueso del brazo", "x": 48, "y": 18, "color": "Azul"},
-                    {"id": "radio", "name": "Radio", "qty": 2, "desc": "Hueso del antebrazo", "x": 45, "y": 32, "color": "Verde"},
-                    {"id": "cubito", "name": "Cúbito (Ulna)", "qty": 2, "desc": "Forma el codo", "x": 52, "y": 25, "color": "Amarillo"},
-                    {"id": "carpo", "name": "Carpo (Rodilla)", "qty": 14, "desc": "Articulación de la rodilla", "x": 42, "y": 45, "color": "Naranja"},
-                    {"id": "metacarpo", "name": "Metacarpo (Caña)", "qty": 2, "desc": "Hueso de la caña", "x": 40, "y": 58, "color": "Morado"},
-                    {"id": "cuartilla", "name": "Cuartilla (P1)", "qty": 2, "desc": "Primera falange", "x": 38, "y": 72, "color": "Rojo"},
-                    {"id": "corona", "name": "Corona (P2)", "qty": 2, "desc": "Segunda falange", "x": 36, "y": 82, "color": "Azul"},
-                    {"id": "tejuelo", "name": "Tejuelo (P3)", "qty": 2, "desc": "Hueso del casco", "x": 35, "y": 92, "color": "Verde"},
+                    {"id": "escapula", "name": "Escápula (Omóplato)", "qty": 2, "desc": "Hueso del hombro, etiquetado 'Scapula'", "x": 26, "y": 34, "color": "Rojo"},
+                    {"id": "humero", "name": "Húmero", "qty": 2, "desc": "Brazo, etiquetado 'Humerus'", "x": 28, "y": 46, "color": "Azul"},
+                    {"id": "radio", "name": "Radio", "qty": 2, "desc": "Antebrazo principal, etiquetado 'Radius'", "x": 26, "y": 56, "color": "Verde"},
+                    {"id": "cubito", "name": "Cúbito (Ulna)", "qty": 2, "desc": "Forma el codo, etiquetado 'Ulna'", "x": 29, "y": 50, "color": "Amarillo"},
+                    {"id": "carpo", "name": "Carpo (Rodilla)", "qty": 14, "desc": "Articulación 'rodilla', etiquetado 'Carpus'", "x": 24, "y": 66, "color": "Naranja"},
+                    {"id": "metacarpo", "name": "Metacarpo (Caña)", "qty": 2, "desc": "Caña delantera, etiquetado 'Metacarpus'", "x": 22, "y": 76, "color": "Morado"},
+                    {"id": "falanges_a", "name": "Falanges Anteriores", "qty": 6, "desc": "Dedos, terminan en casco", "x": 20, "y": 88, "color": "Rojo"},
                 ]
             },
             "posterior": {
                 "name": "Miembro Posterior",
                 "desc": "Pata trasera - 80 huesos",
                 "bones": 80,
-                "image": IMAGES["posterior"],  # IMAGEN DE PATA TRASERA
+                "image": f"{BASE_URL}/skeleton_full.jpg",
                 "questions": [
-                    {"id": "pelvis", "name": "Pelvis (Ilion)", "qty": 2, "desc": "Hueso de la cadera", "x": 25, "y": 25, "color": "Rojo"},
-                    {"id": "femur", "name": "Fémur", "qty": 2, "desc": "Hueso del muslo", "x": 72, "y": 35, "color": "Azul"},
-                    {"id": "rotula", "name": "Rótula", "qty": 2, "desc": "Hueso de la rodilla", "x": 68, "y": 45, "color": "Verde"},
-                    {"id": "tibia", "name": "Tibia", "qty": 2, "desc": "Hueso de la pierna", "x": 72, "y": 55, "color": "Amarillo"},
-                    {"id": "tarso", "name": "Tarso (Corvejón)", "qty": 12, "desc": "Articulación del corvejón", "x": 75, "y": 68, "color": "Naranja"},
-                    {"id": "metatarso", "name": "Metatarso", "qty": 2, "desc": "Caña trasera", "x": 78, "y": 78, "color": "Morado"},
-                    {"id": "falanges_p", "name": "Falanges Posteriores", "qty": 6, "desc": "Dedos de la pata trasera", "x": 80, "y": 90, "color": "Rojo"},
+                    {"id": "pelvis", "name": "Pelvis (Ilion/Isquion/Pubis)", "qty": 6, "desc": "Cadera, etiquetada 'Pelvis'", "x": 70, "y": 28, "color": "Rojo"},
+                    {"id": "femur", "name": "Fémur", "qty": 2, "desc": "Muslo, hueso más fuerte, etiquetado 'Femur'", "x": 76, "y": 40, "color": "Azul"},
+                    {"id": "rotula", "name": "Rótula (Patela)", "qty": 2, "desc": "Rodilla verdadera, etiquetada 'Patella'", "x": 72, "y": 48, "color": "Verde"},
+                    {"id": "tibia", "name": "Tibia", "qty": 2, "desc": "Pierna, etiquetada 'Tibia'", "x": 76, "y": 56, "color": "Amarillo"},
+                    {"id": "tarso", "name": "Tarso (Corvejón)", "qty": 12, "desc": "Articulación corvejón, etiquetada 'Tarsus'", "x": 78, "y": 66, "color": "Naranja"},
+                    {"id": "metatarso", "name": "Metatarso (Caña)", "qty": 2, "desc": "Caña trasera, etiquetada 'Metatarsus'", "x": 80, "y": 76, "color": "Morado"},
+                    {"id": "falanges_p", "name": "Falanges Posteriores", "qty": 6, "desc": "Dedos traseros, terminan en casco", "x": 82, "y": 88, "color": "Rojo"},
                 ]
             }
         }
@@ -135,7 +117,7 @@ SKELETON = {
 
 @api_router.get("/")
 async def root():
-    return {"message": "VetBones API - 205 huesos"}
+    return {"message": "VetBones API - 205 huesos del caballo"}
 
 @api_router.get("/animals")
 async def get_animals():
@@ -147,7 +129,7 @@ async def get_divisions(animal_id: str):
         raise HTTPException(status_code=404, detail="No disponible")
     return [
         {"id": "axial", "name": "Esqueleto Axial", "desc": "Cráneo, columna, tórax", "bones": 81},
-        {"id": "apendicular", "name": "Esqueleto Apendicular", "desc": "Patas", "bones": 120}
+        {"id": "apendicular", "name": "Esqueleto Apendicular", "desc": "Patas delanteras y traseras", "bones": 120}
     ]
 
 @api_router.get("/regions/{animal_id}/{division_id}")
@@ -162,7 +144,7 @@ async def get_regions(animal_id: str, division_id: str):
             "name": r["name"],
             "desc": r["desc"],
             "bones": r["bones"],
-            "image": r["image"]  # Imagen específica de la región
+            "image": r["image"]
         }
         for rid, r in div["regions"].items()
     ]
@@ -211,13 +193,22 @@ async def get_exam(animal_id: str, division_id: str, region_id: str, num: int = 
     return {
         "id": str(uuid.uuid4()),
         "region": region["name"],
-        "image": region["image"],  # IMAGEN ESPECÍFICA DE ESTA REGIÓN
+        "image": region["image"],
         "total": len(questions),
         "questions": questions
     }
 
+# Servir assets (imágenes)
+@api_router.get("/assets/{filename}")
+async def get_asset(filename: str):
+    file_path = ASSETS_DIR / filename
+    if not file_path.exists():
+        raise HTTPException(status_code=404, detail="Archivo no encontrado")
+    return FileResponse(file_path)
+
 app.include_router(api_router)
 app.add_middleware(CORSMiddleware, allow_credentials=True, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
+
 logging.basicConfig(level=logging.INFO)
 
 @app.on_event("shutdown")
