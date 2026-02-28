@@ -619,13 +619,13 @@ const styles = StyleSheet.create({
   },
   optionTextCorrect: {
     flex: 1,
-    fontSize: 16,
+    fontSize: 14,
     color: '#4ECDC4',
     fontWeight: '500',
   },
   optionTextIncorrect: {
     flex: 1,
-    fontSize: 16,
+    fontSize: 14,
     color: '#FF6B6B',
     fontWeight: '500',
   },
