@@ -27,6 +27,7 @@ interface Question {
   options: string[];
   correct_answer: string;
   highlight_description: string;
+  highlight_color: string;
 }
 
 interface Exam {
