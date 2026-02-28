@@ -319,18 +319,16 @@ export default function ExamScreen() {
       </View>
 
       <ScrollView contentContainerStyle={styles.examContent}>
-        {/* Region Badge */}
-        <View style={styles.regionBadge}>
-          <Ionicons name="fitness-outline" size={16} color="#4ECDC4" />
-          <Text style={styles.regionBadgeText}>{exam.region_name}</Text>
-        </View>
-
-        {/* Question */}
-        <View style={styles.questionCard}>
-          <Text style={styles.questionTitle}>Identifica el hueso</Text>
-          <Text style={styles.questionDescription}>
-            {currentQuestion.highlight_description}
-          </Text>
+        {/* Image Card - Make it prominent */}
+        <View style={styles.imageCard}>
+          <View style={styles.imageHeader}>
+            <View style={styles.boneNameBadge}>
+              <Ionicons name="eye-outline" size={16} color="#fff" />
+              <Text style={styles.boneNameText}>
+                ¿Qué hueso es este?
+              </Text>
+            </View>
+          </View>
           
           {/* Image */}
           <View style={styles.imageContainer}>
@@ -338,14 +336,16 @@ export default function ExamScreen() {
               source={{ uri: currentQuestion.image_url }}
               style={styles.boneImage}
               contentFit="contain"
-              transition={200}
+              transition={300}
             />
-            <View style={styles.imageOverlay}>
-              <View style={styles.highlightIndicator}>
-                <Ionicons name="locate" size={20} color="#FF6B6B" />
-                <Text style={styles.highlightText}>Hueso señalado</Text>
-              </View>
-            </View>
+          </View>
+          
+          {/* Description */}
+          <View style={styles.descriptionBox}>
+            <Ionicons name="information-circle" size={18} color="#4ECDC4" />
+            <Text style={styles.descriptionText}>
+              {currentQuestion.highlight_description}
+            </Text>
           </View>
         </View>
 
