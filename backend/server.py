@@ -20,23 +20,23 @@ api_router = APIRouter(prefix="/api")
 
 # ============================================
 # IMÁGENES DIFERENTES PARA CADA ZONA
-# Todas verificadas y funcionando
+# Usando OpenClipArt y otras fuentes estables
 # ============================================
 IMAGES = {
-    # Cráneo - usar vector del esqueleto completo centrado en cabeza
-    "craneo": "https://img.freepik.com/free-vector/horse-skeleton_1308-48065.jpg",
+    # Cráneo - silueta de caballo con foco en cabeza
+    "craneo": "https://openclipart.org/image/400px/255836",
     
-    # Columna vertebral - esqueleto completo con etiquetas
-    "columna": "https://img.freepik.com/free-vector/science-horse-skeletal-system_1308-48067.jpg",
+    # Columna vertebral - silueta lateral del caballo
+    "columna": "https://openclipart.org/image/400px/211621",
     
-    # Tórax - esqueleto con vista de costillas
-    "torax": "https://img.freepik.com/free-vector/horse-skeleton-anatomy_1308-48068.jpg",
+    # Tórax - otra vista del caballo
+    "torax": "https://openclipart.org/image/400px/169761",
     
-    # Miembro anterior - esqueleto mostrando patas
-    "anterior": "https://img.freepik.com/free-vector/horse-skeleton_1308-48065.jpg",
+    # Miembro anterior - caballo con énfasis en patas
+    "anterior": "https://cdn.iconscout.com/icon/premium/png-256-thumb/horse-skeleton-1-893895.png",
     
-    # Miembro posterior - esqueleto completo con énfasis posterior
-    "posterior": "https://img.freepik.com/free-vector/horse-skeleton-anatomy_1308-48068.jpg",
+    # Miembro posterior - silueta de caballo
+    "posterior": "https://openclipart.org/image/400px/255836",
 }
 
 # Datos de huesos organizados por región con IMÁGENES ESPECÍFICAS
