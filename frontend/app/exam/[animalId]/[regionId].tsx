@@ -321,30 +321,53 @@ export default function ExamScreen() {
       </View>
 
       <ScrollView contentContainerStyle={styles.examContent}>
-        {/* Image Card - Make it prominent */}
+        {/* Color indicator */}
+        <View style={styles.colorIndicator}>
+          <View style={[styles.colorDot, { backgroundColor: getColorHex(currentQuestion.highlight_color) }]} />
+          <Text style={styles.colorText}>
+            Identifica el hueso marcado en color <Text style={[styles.colorName, { color: getColorHex(currentQuestion.highlight_color) }]}>{currentQuestion.highlight_color}</Text>
+          </Text>
+        </View>
+
+        {/* Image Card with marker */}
         <View style={styles.imageCard}>
-          <View style={styles.imageHeader}>
-            <View style={styles.boneNameBadge}>
-              <Ionicons name="eye-outline" size={16} color="#fff" />
-              <Text style={styles.boneNameText}>
-                ¿Qué hueso es este?
-              </Text>
-            </View>
-          </View>
-          
-          {/* Image */}
-          <View style={styles.imageContainer}>
+          <View style={styles.imageWrapper}>
             <Image
               source={{ uri: currentQuestion.image_url }}
               style={styles.boneImage}
               contentFit="contain"
               transition={300}
             />
+            {/* Marker overlay */}
+            <View 
+              style={[
+                styles.marker,
+                { 
+                  left: `${currentQuestion.marker_x}%`,
+                  top: `${currentQuestion.marker_y}%`,
+                  borderColor: getColorHex(currentQuestion.highlight_color),
+                  backgroundColor: `${getColorHex(currentQuestion.highlight_color)}40`,
+                }
+              ]}
+            >
+              <View style={[styles.markerInner, { backgroundColor: getColorHex(currentQuestion.highlight_color) }]} />
+            </View>
+            {/* Pulsing ring */}
+            <View 
+              style={[
+                styles.markerRing,
+                { 
+                  left: `${currentQuestion.marker_x}%`,
+                  top: `${currentQuestion.marker_y}%`,
+                  borderColor: getColorHex(currentQuestion.highlight_color),
+                }
+              ]}
+            />
           </View>
           
           {/* Description */}
           <View style={styles.descriptionBox}>
-            <Ionicons name="information-circle" size={18} color="#4ECDC4" />
+            <Ionicons name="help-circle" size={18} color={getColorHex(currentQuestion.highlight_color)} />
             <Text style={styles.descriptionText}>
               {currentQuestion.highlight_description}
             </Text>
