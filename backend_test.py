@@ -10,7 +10,7 @@ import sys
 from typing import Dict, Any
 
 # Base URL for API testing (from frontend/.env)
-BASE_URL = "https://vet-bones-study.preview.emergentagent.com/api"
+BASE_URL = "https://skeletal-quiz.preview.emergentagent.com/api"
 
 class VetBonesAPITester:
     def __init__(self):
