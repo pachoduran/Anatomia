@@ -485,6 +485,47 @@ const styles = StyleSheet.create({
   examContent: {
     padding: 12,
   },
+  imageCard: {
+    backgroundColor: '#16213e',
+    borderRadius: 12,
+    marginBottom: 10,
+    overflow: 'hidden',
+  },
+  imageHeader: {
+    padding: 10,
+    backgroundColor: '#0f1629',
+  },
+  boneNameBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  boneNameText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginLeft: 8,
+  },
+  imageContainer: {
+    backgroundColor: '#0f1629',
+  },
+  boneImage: {
+    width: '100%',
+    height: 380,
+  },
+  descriptionBox: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    padding: 10,
+    backgroundColor: 'rgba(78, 205, 196, 0.1)',
+  },
+  descriptionText: {
+    flex: 1,
+    color: '#ccc',
+    fontSize: 12,
+    marginLeft: 8,
+    lineHeight: 18,
+  },
   regionBadge: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -518,33 +559,6 @@ const styles = StyleSheet.create({
     color: '#aaa',
     marginBottom: 10,
     lineHeight: 18,
-  },
-  imageContainer: {
-    position: 'relative',
-    borderRadius: 12,
-    overflow: 'hidden',
-    backgroundColor: '#0f1629',
-  },
-  boneImage: {
-    width: '100%',
-    height: 350,
-  },
-  imageOverlay: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    padding: 12,
-    backgroundColor: 'rgba(0, 0, 0, 0.6)',
-  },
-  highlightIndicator: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  highlightText: {
-    color: '#FF6B6B',
-    marginLeft: 8,
-    fontSize: 13,
   },
   optionsContainer: {
     marginBottom: 8,
