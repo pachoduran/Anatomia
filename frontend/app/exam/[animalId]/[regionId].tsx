@@ -523,11 +523,67 @@ const styles = StyleSheet.create({
   examContent: {
     padding: 12,
   },
-  imageCard: {
+  colorIndicator: {
+    flexDirection: 'row',
+    alignItems: 'center',
     backgroundColor: '#16213e',
+    padding: 12,
+    borderRadius: 10,
+    marginBottom: 10,
+  },
+  colorDot: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    marginRight: 10,
+  },
+  colorText: {
+    color: '#fff',
+    fontSize: 14,
+    flex: 1,
+  },
+  colorName: {
+    fontWeight: 'bold',
+  },
+  imageCard: {
+    backgroundColor: '#0a0a1a',
     borderRadius: 12,
     marginBottom: 10,
     overflow: 'hidden',
+  },
+  imageWrapper: {
+    position: 'relative',
+    backgroundColor: '#fff',
+  },
+  boneImage: {
+    width: '100%',
+    height: 320,
+  },
+  marker: {
+    position: 'absolute',
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    borderWidth: 3,
+    marginLeft: -20,
+    marginTop: -20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  markerInner: {
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+  },
+  markerRing: {
+    position: 'absolute',
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    borderWidth: 2,
+    marginLeft: -28,
+    marginTop: -28,
+    opacity: 0.5,
   },
   imageHeader: {
     padding: 10,
@@ -547,20 +603,16 @@ const styles = StyleSheet.create({
   imageContainer: {
     backgroundColor: '#0f1629',
   },
-  boneImage: {
-    width: '100%',
-    height: 380,
-  },
   descriptionBox: {
     flexDirection: 'row',
     alignItems: 'flex-start',
     padding: 10,
-    backgroundColor: 'rgba(78, 205, 196, 0.1)',
+    backgroundColor: '#16213e',
   },
   descriptionText: {
     flex: 1,
     color: '#ccc',
-    fontSize: 12,
+    fontSize: 13,
     marginLeft: 8,
     lineHeight: 18,
   },
