@@ -101,3 +101,111 @@
 #====================================================================================================
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
+
+user_problem_statement: "Aplicación móvil para estudiar el sistema óseo de animales (caballos), con exámenes de selección múltiple e imágenes anatómicas reales para veterinarios"
+
+backend:
+  - task: "GET /api/animals - Listar animales disponibles"
+    implemented: true
+    working: true
+    file: "server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "Endpoint implementado, retorna lista de animales con caballo disponible y vaca/cerdo como próximamente"
+
+  - task: "GET /api/regions/{animal_id} - Obtener regiones anatómicas"
+    implemented: true
+    working: true
+    file: "server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "Retorna 5 regiones anatómicas del caballo: cabeza, columna vertebral, tórax, extremidad anterior y posterior"
+
+  - task: "GET /api/exam/{animal_id}/{region_id} - Generar examen de selección múltiple"
+    implemented: true
+    working: true
+    file: "server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "Genera examen con preguntas aleatorias, opciones múltiples y respuestas correctas para la región seleccionada"
+
+  - task: "GET /api/bones/{animal_id}/{region_id} - Obtener huesos por región"
+    implemented: true
+    working: true
+    file: "server.py"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: true
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "Retorna lista de huesos con nombre, descripción, imagen URL para cada región"
+
+frontend:
+  - task: "Pantalla principal - Selección de animal"
+    implemented: true
+    working: true
+    file: "app/index.tsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "UI funcional con tarjetas de animales, caballo disponible, vaca/cerdo deshabilitados"
+
+  - task: "Pantalla regiones - Selección de región anatómica"
+    implemented: true
+    working: true
+    file: "app/regions/[animalId].tsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "Lista las 5 regiones con iconos, descripción y cantidad de huesos"
+
+  - task: "Pantalla examen - Quiz de selección múltiple"
+    implemented: true
+    working: true
+    file: "app/exam/[animalId]/[regionId].tsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "Examen funcional con imágenes anatómicas reales de UC Davis, opciones múltiples, feedback visual correcto/incorrecto"
+
+metadata:
+  created_by: "main_agent"
+  version: "1.0"
+  test_sequence: 1
+  run_ui: false
+
+test_plan:
+  current_focus:
+    - "GET /api/animals"
+    - "GET /api/regions/{animal_id}"
+    - "GET /api/exam/{animal_id}/{region_id}"
+    - "GET /api/bones/{animal_id}/{region_id}"
+  stuck_tasks: []
+  test_all: true
+  test_priority: "high_first"
+
+agent_communication:
+  - agent: "main"
+    message: "MVP completado. Backend con 4 endpoints principales para animales, regiones, huesos y exámenes. Frontend con 3 pantallas navegables. Imágenes anatómicas reales de UC Davis Veterinary. Necesito pruebas de backend con curl para verificar todos los endpoints."
