@@ -630,22 +630,22 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   actionContainer: {
-    marginTop: 8,
+    marginTop: 4,
   },
   confirmButton: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#4ECDC4',
-    borderRadius: 12,
-    padding: 16,
+    borderRadius: 10,
+    padding: 12,
   },
   confirmButtonDisabled: {
     backgroundColor: '#2a2a4a',
   },
   confirmButtonText: {
     color: '#fff',
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: '600',
     marginRight: 8,
   },
@@ -654,8 +654,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#45B7D1',
-    borderRadius: 12,
-    padding: 16,
+    borderRadius: 10,
+    padding: 12,
   },
   nextButtonText: {
     color: '#fff',
