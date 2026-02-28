@@ -28,6 +28,7 @@ ASSETS_DIR = ROOT_DIR / "assets"
 BASE_URL = "/api/assets"
 
 # DATOS DEL ESQUELETO - 205 huesos organizados
+# Usando imágenes generadas con Nano Banana
 SKELETON = {
     "axial": {
         "name": "Esqueleto Axial",
@@ -37,37 +38,38 @@ SKELETON = {
                 "name": "Cráneo y Cara",
                 "desc": "34 huesos del cráneo y cara",
                 "bones": 34,
-                "image": f"{BASE_URL}/skeleton_full.jpg",
+                "image": f"{BASE_URL}/horse_skull.jpg",  # IMAGEN GENERADA - CRÁNEO
                 "questions": [
-                    {"id": "frontal", "name": "Hueso Frontal", "qty": 2, "desc": "Parte superior del cráneo, etiquetado como 'Skull' en la imagen", "x": 8, "y": 20, "color": "Rojo"},
-                    {"id": "parietal", "name": "Hueso Parietal", "qty": 2, "desc": "Detrás del frontal, parte superior del cráneo", "x": 12, "y": 18, "color": "Azul"},
-                    {"id": "temporal", "name": "Hueso Temporal", "qty": 2, "desc": "Lateral del cráneo, cerca del oído", "x": 14, "y": 24, "color": "Verde"},
-                    {"id": "occipital", "name": "Hueso Occipital", "qty": 1, "desc": "Posterior del cráneo, conecta con Atlas", "x": 16, "y": 22, "color": "Amarillo"},
-                    {"id": "nasal", "name": "Hueso Nasal", "qty": 2, "desc": "Forma la nariz, parte anterior de la cabeza", "x": 5, "y": 24, "color": "Naranja"},
-                    {"id": "maxilar", "name": "Maxilar Superior", "qty": 2, "desc": "Contiene dientes superiores", "x": 8, "y": 32, "color": "Morado"},
-                    {"id": "mandibula", "name": "Mandíbula", "qty": 2, "desc": "Hueso móvil inferior, etiquetado como 'Jaw' en la imagen", "x": 12, "y": 38, "color": "Rojo"},
+                    {"id": "frontal", "name": "Hueso Frontal", "qty": 2, "desc": "Parte superior del cráneo, forma la frente", "x": 40, "y": 15, "color": "Rojo"},
+                    {"id": "parietal", "name": "Hueso Parietal", "qty": 2, "desc": "Detrás del frontal, parte superior-posterior del cráneo", "x": 60, "y": 20, "color": "Azul"},
+                    {"id": "temporal", "name": "Hueso Temporal", "qty": 2, "desc": "Lateral del cráneo, contiene el oído", "x": 70, "y": 40, "color": "Verde"},
+                    {"id": "occipital", "name": "Hueso Occipital", "qty": 1, "desc": "Posterior del cráneo, conecta con Atlas", "x": 80, "y": 35, "color": "Amarillo"},
+                    {"id": "nasal", "name": "Hueso Nasal", "qty": 2, "desc": "Forma el puente de la nariz", "x": 15, "y": 30, "color": "Naranja"},
+                    {"id": "maxilar", "name": "Maxilar Superior", "qty": 2, "desc": "Contiene los dientes superiores", "x": 25, "y": 50, "color": "Morado"},
+                    {"id": "mandibula", "name": "Mandíbula", "qty": 2, "desc": "Hueso móvil inferior con dientes", "x": 35, "y": 70, "color": "Rojo"},
+                    {"id": "orbita", "name": "Órbita Ocular", "qty": 2, "desc": "Cavidad donde se aloja el ojo", "x": 30, "y": 35, "color": "Azul"},
                 ]
             },
             "columna": {
                 "name": "Columna Vertebral",
                 "desc": "54 vértebras del cuello a la cola",
                 "bones": 54,
-                "image": f"{BASE_URL}/skeleton_full.jpg",
+                "image": f"{BASE_URL}/horse_spine.jpg",  # IMAGEN GENERADA - COLUMNA
                 "questions": [
-                    {"id": "cervicales", "name": "Vértebras Cervicales (C1-C7)", "qty": 7, "desc": "Cuello del caballo, entre cabeza y cruz", "x": 22, "y": 28, "color": "Rojo"},
-                    {"id": "toracicas", "name": "Vértebras Torácicas (T1-T18)", "qty": 18, "desc": "Región del lomo con costillas, etiquetadas 'Thoracic vertebrae'", "x": 42, "y": 16, "color": "Azul"},
-                    {"id": "lumbares", "name": "Vértebras Lumbares (L1-L6)", "qty": 6, "desc": "Lomo posterior, etiquetadas 'Lumbar vertebrae'", "x": 58, "y": 20, "color": "Verde"},
-                    {"id": "sacro", "name": "Sacro (5 fusionadas)", "qty": 5, "desc": "Grupa, fusionadas con la pelvis, etiquetado 'Sacrum'", "x": 68, "y": 24, "color": "Amarillo"},
-                    {"id": "coccigeas", "name": "Vértebras Coccígeas", "qty": 18, "desc": "Cola del caballo, etiquetadas 'Coccygeal vertebrae'", "x": 85, "y": 30, "color": "Naranja"},
+                    {"id": "cervicales", "name": "Vértebras Cervicales (C1-C7)", "qty": 7, "desc": "7 vértebras del cuello, incluyendo Atlas y Axis", "x": 15, "y": 45, "color": "Rojo"},
+                    {"id": "toracicas", "name": "Vértebras Torácicas (T1-T18)", "qty": 18, "desc": "18 vértebras que se articulan con las costillas", "x": 40, "y": 35, "color": "Azul"},
+                    {"id": "lumbares", "name": "Vértebras Lumbares (L1-L6)", "qty": 6, "desc": "6 vértebras del lomo, sin costillas", "x": 60, "y": 40, "color": "Verde"},
+                    {"id": "sacro", "name": "Sacro (5 fusionadas)", "qty": 5, "desc": "Vértebras fusionadas de la grupa", "x": 75, "y": 45, "color": "Amarillo"},
+                    {"id": "coccigeas", "name": "Vértebras Coccígeas", "qty": 18, "desc": "Vértebras de la cola (15-21)", "x": 90, "y": 50, "color": "Naranja"},
                 ]
             },
             "torax": {
                 "name": "Caja Torácica",
                 "desc": "Costillas y esternón - 37 huesos",
                 "bones": 37,
-                "image": f"{BASE_URL}/skeleton_full.jpg",
+                "image": f"{BASE_URL}/skeleton_full.jpg",  # Usando imagen completa para tórax
                 "questions": [
-                    {"id": "costillas", "name": "Costillas (18 pares)", "qty": 36, "desc": "Protegen órganos vitales, etiquetadas 'Ribs'", "x": 42, "y": 42, "color": "Azul"},
+                    {"id": "costillas", "name": "Costillas (18 pares)", "qty": 36, "desc": "Protegen órganos vitales, 8 verdaderas + 10 falsas", "x": 42, "y": 42, "color": "Azul"},
                     {"id": "esternon", "name": "Esternón", "qty": 1, "desc": "Hueso del pecho donde se unen las costillas", "x": 35, "y": 62, "color": "Rojo"},
                 ]
             }
@@ -81,30 +83,30 @@ SKELETON = {
                 "name": "Miembro Anterior",
                 "desc": "Pata delantera - 40 huesos",
                 "bones": 40,
-                "image": f"{BASE_URL}/skeleton_full.jpg",
+                "image": f"{BASE_URL}/horse_forelimb.jpg",  # IMAGEN GENERADA - PATA DELANTERA
                 "questions": [
-                    {"id": "escapula", "name": "Escápula (Omóplato)", "qty": 2, "desc": "Hueso del hombro, etiquetado 'Scapula'", "x": 26, "y": 34, "color": "Rojo"},
-                    {"id": "humero", "name": "Húmero", "qty": 2, "desc": "Brazo, etiquetado 'Humerus'", "x": 28, "y": 46, "color": "Azul"},
-                    {"id": "radio", "name": "Radio", "qty": 2, "desc": "Antebrazo principal, etiquetado 'Radius'", "x": 26, "y": 56, "color": "Verde"},
-                    {"id": "cubito", "name": "Cúbito (Ulna)", "qty": 2, "desc": "Forma el codo, etiquetado 'Ulna'", "x": 29, "y": 50, "color": "Amarillo"},
-                    {"id": "carpo", "name": "Carpo (Rodilla)", "qty": 14, "desc": "Articulación 'rodilla', etiquetado 'Carpus'", "x": 24, "y": 66, "color": "Naranja"},
-                    {"id": "metacarpo", "name": "Metacarpo (Caña)", "qty": 2, "desc": "Caña delantera, etiquetado 'Metacarpus'", "x": 22, "y": 76, "color": "Morado"},
-                    {"id": "falanges_a", "name": "Falanges Anteriores", "qty": 6, "desc": "Dedos, terminan en casco", "x": 20, "y": 88, "color": "Rojo"},
+                    {"id": "escapula", "name": "Escápula (Omóplato)", "qty": 2, "desc": "Hueso plano triangular del hombro", "x": 30, "y": 10, "color": "Rojo"},
+                    {"id": "humero", "name": "Húmero", "qty": 2, "desc": "Hueso del brazo", "x": 35, "y": 25, "color": "Azul"},
+                    {"id": "radio", "name": "Radio", "qty": 2, "desc": "Hueso principal del antebrazo", "x": 40, "y": 40, "color": "Verde"},
+                    {"id": "cubito", "name": "Cúbito (Ulna)", "qty": 2, "desc": "Forma el codo (olécranon)", "x": 45, "y": 35, "color": "Amarillo"},
+                    {"id": "carpo", "name": "Carpo (Rodilla)", "qty": 14, "desc": "7-8 huesos pequeños de la rodilla", "x": 42, "y": 55, "color": "Naranja"},
+                    {"id": "metacarpo", "name": "Metacarpo (Caña)", "qty": 2, "desc": "Hueso largo de la caña", "x": 45, "y": 68, "color": "Morado"},
+                    {"id": "falanges_a", "name": "Falanges (Cuartilla, Corona, Tejuelo)", "qty": 6, "desc": "Dedos que terminan en el casco", "x": 48, "y": 85, "color": "Rojo"},
                 ]
             },
             "posterior": {
                 "name": "Miembro Posterior",
                 "desc": "Pata trasera - 80 huesos",
                 "bones": 80,
-                "image": f"{BASE_URL}/skeleton_full.jpg",
+                "image": f"{BASE_URL}/horse_hindlimb.jpg",  # IMAGEN GENERADA - PATA TRASERA
                 "questions": [
-                    {"id": "pelvis", "name": "Pelvis (Ilion/Isquion/Pubis)", "qty": 6, "desc": "Cadera, etiquetada 'Pelvis'", "x": 70, "y": 28, "color": "Rojo"},
-                    {"id": "femur", "name": "Fémur", "qty": 2, "desc": "Muslo, hueso más fuerte, etiquetado 'Femur'", "x": 76, "y": 40, "color": "Azul"},
-                    {"id": "rotula", "name": "Rótula (Patela)", "qty": 2, "desc": "Rodilla verdadera, etiquetada 'Patella'", "x": 72, "y": 48, "color": "Verde"},
-                    {"id": "tibia", "name": "Tibia", "qty": 2, "desc": "Pierna, etiquetada 'Tibia'", "x": 76, "y": 56, "color": "Amarillo"},
-                    {"id": "tarso", "name": "Tarso (Corvejón)", "qty": 12, "desc": "Articulación corvejón, etiquetada 'Tarsus'", "x": 78, "y": 66, "color": "Naranja"},
-                    {"id": "metatarso", "name": "Metatarso (Caña)", "qty": 2, "desc": "Caña trasera, etiquetada 'Metatarsus'", "x": 80, "y": 76, "color": "Morado"},
-                    {"id": "falanges_p", "name": "Falanges Posteriores", "qty": 6, "desc": "Dedos traseros, terminan en casco", "x": 82, "y": 88, "color": "Rojo"},
+                    {"id": "pelvis", "name": "Pelvis (Ilion/Isquion/Pubis)", "qty": 6, "desc": "Huesos de la cadera", "x": 25, "y": 15, "color": "Rojo"},
+                    {"id": "femur", "name": "Fémur", "qty": 2, "desc": "Hueso del muslo, el más fuerte", "x": 45, "y": 30, "color": "Azul"},
+                    {"id": "rotula", "name": "Rótula (Patela)", "qty": 2, "desc": "Hueso de la rodilla verdadera", "x": 40, "y": 42, "color": "Verde"},
+                    {"id": "tibia", "name": "Tibia", "qty": 2, "desc": "Hueso de la pierna", "x": 50, "y": 52, "color": "Amarillo"},
+                    {"id": "tarso", "name": "Tarso (Corvejón)", "qty": 12, "desc": "6 huesos del corvejón por lado", "x": 55, "y": 65, "color": "Naranja"},
+                    {"id": "metatarso", "name": "Metatarso (Caña)", "qty": 2, "desc": "Caña de la pata trasera", "x": 58, "y": 75, "color": "Morado"},
+                    {"id": "falanges_p", "name": "Falanges Posteriores", "qty": 6, "desc": "Dedos de la pata trasera", "x": 60, "y": 90, "color": "Rojo"},
                 ]
             }
         }
