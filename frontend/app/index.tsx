@@ -126,32 +126,37 @@ export default function HomeScreen() {
                   ]}>
                     <Ionicons
                       name={getAnimalIcon(animal.icon) as any}
-                      size={40}
+                      size={32}
                       color={animal.available ? '#4ECDC4' : '#666'}
                     />
                   </View>
-                  <Text style={[
-                    styles.animalName,
-                    !animal.available && styles.textDisabled
-                  ]}>
-                    {animal.name}
-                  </Text>
-                  <Text style={styles.animalScientific}>
-                    {animal.name_scientific}
-                  </Text>
-                  <Text style={styles.animalBones}>
-                    {animal.total_bones} huesos
-                  </Text>
-                  {!animal.available && (
-                    <View style={styles.comingSoonBadge}>
-                      <Text style={styles.comingSoonText}>Próximamente</Text>
-                    </View>
-                  )}
+                  <View style={styles.animalInfo}>
+                    <Text style={[
+                      styles.animalName,
+                      !animal.available && styles.textDisabled
+                    ]}>
+                      {animal.name}
+                    </Text>
+                    <Text style={styles.animalScientific}>
+                      {animal.name_scientific}
+                    </Text>
+                    <Text style={styles.animalBones}>
+                      {animal.total_bones} huesos
+                    </Text>
+                    {!animal.available && (
+                      <View style={styles.comingSoonBadge}>
+                        <Text style={styles.comingSoonText}>Próximamente</Text>
+                      </View>
+                    )}
+                    {animal.available && (
+                      <View style={styles.availableBadge}>
+                        <Ionicons name="checkmark-circle" size={14} color="#4ECDC4" />
+                        <Text style={styles.availableText}>Disponible</Text>
+                      </View>
+                    )}
+                  </View>
                   {animal.available && (
-                    <View style={styles.availableBadge}>
-                      <Ionicons name="checkmark-circle" size={16} color="#4ECDC4" />
-                      <Text style={styles.availableText}>Disponible</Text>
-                    </View>
+                    <Ionicons name="chevron-forward" size={24} color="#4ECDC4" style={styles.cardArrow} />
                   )}
                 </TouchableOpacity>
               ))}
