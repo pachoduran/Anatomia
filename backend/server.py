@@ -14,22 +14,12 @@ import random
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
 
-# MongoDB connection
 mongo_url = os.environ['MONGO_URL']
 client = AsyncIOMotorClient(mongo_url)
 db = client[os.environ['DB_NAME']]
 
 app = FastAPI()
 api_router = APIRouter(prefix="/api")
-
-class Bone(BaseModel):
-    id: str
-    name: str
-    name_latin: Optional[str] = None
-    region: str
-    description: str
-    image_url: str
-    highlight_color: str = "Rojo"
 
 class Question(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
@@ -41,6 +31,8 @@ class Question(BaseModel):
     correct_answer: str
     highlight_description: str
     highlight_color: str
+    marker_x: float  # Posición X del marcador (0-100%)
+    marker_y: float  # Posición Y del marcador (0-100%)
 
 class ExamResult(BaseModel):
     total_questions: int
@@ -49,237 +41,251 @@ class ExamResult(BaseModel):
     region: str
     timestamp: datetime = Field(default_factory=datetime.utcnow)
 
-class Region(BaseModel):
-    id: str
-    name: str
-    description: str
-    icon: str
-    bone_count: int
+# Imagen base del esqueleto
+BASE_IMG = "https://img.freepik.com/free-vector/science-horse-skeletal-system_1308-48067.jpg"
 
-# Imágenes funcionales de diferentes huesos
-# Usando Freepik y otras fuentes abiertas
-BASE_SKELETON_IMG = "https://img.freepik.com/free-vector/science-horse-skeletal-system_1308-48067.jpg"
-
+# Datos de huesos con coordenadas del marcador (posición aproximada en la imagen)
 HORSE_BONES = {
     "cabeza": [
         {
             "id": "skull_01",
             "name": "Cráneo",
-            "name_latin": "Cranium",
             "region": "cabeza",
-            "description": "Estructura ósea que protege el cerebro. En la imagen, es la parte más anterior del esqueleto, de forma redondeada.",
-            "image_url": BASE_SKELETON_IMG,
-            "highlight_color": "Rojo"
+            "description": "Estructura ósea redondeada que protege el cerebro.",
+            "image_url": BASE_IMG,
+            "highlight_color": "Rojo",
+            "marker_x": 8,  # Posición X en porcentaje
+            "marker_y": 22  # Posición Y en porcentaje
         },
         {
             "id": "mandible_01",
             "name": "Mandíbula",
-            "name_latin": "Mandibula",
             "region": "cabeza",
-            "description": "Hueso móvil inferior de la cabeza. En la imagen, es el hueso alargado debajo del cráneo que contiene los dientes inferiores.",
-            "image_url": BASE_SKELETON_IMG,
-            "highlight_color": "Azul"
+            "description": "Hueso móvil inferior de la cabeza con los dientes inferiores.",
+            "image_url": BASE_IMG,
+            "highlight_color": "Azul",
+            "marker_x": 12,
+            "marker_y": 35
         },
         {
-            "id": "maxilla_01",
-            "name": "Maxilar",
-            "name_latin": "Maxilla",
+            "id": "orbital_01",
+            "name": "Órbita",
             "region": "cabeza",
-            "description": "Hueso superior que contiene los dientes superiores. Forma la parte superior de la cara del caballo.",
-            "image_url": BASE_SKELETON_IMG,
-            "highlight_color": "Verde"
+            "description": "Cavidad ósea donde se aloja el ojo.",
+            "image_url": BASE_IMG,
+            "highlight_color": "Verde",
+            "marker_x": 10,
+            "marker_y": 18
         }
     ],
     "columna_vertebral": [
         {
             "id": "cervical_01",
             "name": "Vértebras Cervicales",
-            "name_latin": "Vertebrae cervicales",
             "region": "columna_vertebral",
-            "description": "7 vértebras que forman el cuello. En la imagen, son los huesos entre la cabeza y el tronco que permiten el movimiento del cuello.",
-            "image_url": BASE_SKELETON_IMG,
-            "highlight_color": "Rojo"
+            "description": "7 vértebras del cuello, entre la cabeza y el tórax.",
+            "image_url": BASE_IMG,
+            "highlight_color": "Rojo",
+            "marker_x": 22,
+            "marker_y": 25
         },
         {
             "id": "thoracic_01",
             "name": "Vértebras Torácicas",
-            "name_latin": "Vertebrae thoracicae",
             "region": "columna_vertebral",
-            "description": "18 vértebras en la región del tórax. Se articulan con las costillas. Forman la parte superior del lomo.",
-            "image_url": BASE_SKELETON_IMG,
-            "highlight_color": "Azul"
+            "description": "18 vértebras en la región del lomo, con apófisis espinosas altas.",
+            "image_url": BASE_IMG,
+            "highlight_color": "Azul",
+            "marker_x": 40,
+            "marker_y": 18
         },
         {
             "id": "lumbar_01",
             "name": "Vértebras Lumbares",
-            "name_latin": "Vertebrae lumbales",
             "region": "columna_vertebral",
-            "description": "6 vértebras en la región del lomo, posterior a las torácicas. No tienen articulación con costillas.",
-            "image_url": BASE_SKELETON_IMG,
-            "highlight_color": "Verde"
+            "description": "6 vértebras en la zona del lomo posterior.",
+            "image_url": BASE_IMG,
+            "highlight_color": "Verde",
+            "marker_x": 55,
+            "marker_y": 22
         },
         {
             "id": "sacral_01",
             "name": "Sacro",
-            "name_latin": "Os sacrum",
             "region": "columna_vertebral",
-            "description": "5 vértebras fusionadas que conectan con la pelvis. Está ubicado en la grupa del caballo.",
-            "image_url": BASE_SKELETON_IMG,
-            "highlight_color": "Amarillo"
+            "description": "Vértebras fusionadas en la grupa, conectan con la pelvis.",
+            "image_url": BASE_IMG,
+            "highlight_color": "Amarillo",
+            "marker_x": 68,
+            "marker_y": 25
         }
     ],
     "extremidad_anterior": [
         {
             "id": "scapula_01",
             "name": "Escápula",
-            "name_latin": "Scapula",
             "region": "extremidad_anterior",
-            "description": "Hueso plano triangular en la parte superior del miembro anterior. También llamado omóplato. Conecta el brazo con el tronco.",
-            "image_url": BASE_SKELETON_IMG,
-            "highlight_color": "Rojo"
+            "description": "Hueso plano triangular en la parte superior del hombro.",
+            "image_url": BASE_IMG,
+            "highlight_color": "Rojo",
+            "marker_x": 25,
+            "marker_y": 35
         },
         {
             "id": "humerus_01",
             "name": "Húmero",
-            "name_latin": "Humerus",
             "region": "extremidad_anterior",
-            "description": "Hueso largo del brazo, ubicado entre la escápula y el codo. Se articula proximalmente con la escápula.",
-            "image_url": BASE_SKELETON_IMG,
-            "highlight_color": "Azul"
+            "description": "Hueso del brazo entre el hombro y el codo.",
+            "image_url": BASE_IMG,
+            "highlight_color": "Azul",
+            "marker_x": 28,
+            "marker_y": 48
         },
         {
             "id": "radius_01",
             "name": "Radio",
-            "name_latin": "Radius",
             "region": "extremidad_anterior",
-            "description": "Hueso principal del antebrazo, ubicado entre el codo y la rodilla. Soporta la mayor parte del peso del miembro anterior.",
-            "image_url": BASE_SKELETON_IMG,
-            "highlight_color": "Verde"
+            "description": "Hueso principal del antebrazo, debajo del codo.",
+            "image_url": BASE_IMG,
+            "highlight_color": "Verde",
+            "marker_x": 26,
+            "marker_y": 58
         },
         {
             "id": "ulna_01",
             "name": "Ulna (Cúbito)",
-            "name_latin": "Ulna",
             "region": "extremidad_anterior",
-            "description": "Hueso fusionado con el radio en equinos adultos. El olécranon (punta del codo) es la parte visible de la ulna.",
-            "image_url": BASE_SKELETON_IMG,
-            "highlight_color": "Amarillo"
+            "description": "Forma el punto del codo (olécranon).",
+            "image_url": BASE_IMG,
+            "highlight_color": "Amarillo",
+            "marker_x": 30,
+            "marker_y": 52
         },
         {
             "id": "carpus_01",
             "name": "Carpo (Rodilla)",
-            "name_latin": "Carpus",
             "region": "extremidad_anterior",
-            "description": "Conjunto de 7-8 huesos pequeños que forman la 'rodilla' del caballo. Equivalente a la muñeca humana.",
-            "image_url": BASE_SKELETON_IMG,
-            "highlight_color": "Naranja"
+            "description": "Articulación de la rodilla del caballo, equivalente a la muñeca.",
+            "image_url": BASE_IMG,
+            "highlight_color": "Naranja",
+            "marker_x": 24,
+            "marker_y": 68
         },
         {
-            "id": "metacarpal_01",
+            "id": "metacarpus_01",
             "name": "Metacarpo (Caña)",
-            "name_latin": "Os metacarpale III",
             "region": "extremidad_anterior",
-            "description": "Hueso largo entre el carpo y las falanges. El tercer metacarpiano es el hueso principal de la caña.",
-            "image_url": BASE_SKELETON_IMG,
-            "highlight_color": "Morado"
+            "description": "Hueso largo de la caña, entre rodilla y menudillo.",
+            "image_url": BASE_IMG,
+            "highlight_color": "Morado",
+            "marker_x": 22,
+            "marker_y": 78
         }
     ],
     "extremidad_posterior": [
         {
             "id": "pelvis_01",
-            "name": "Pelvis",
-            "name_latin": "Os coxae",
+            "name": "Pelvis (Ilion)",
             "region": "extremidad_posterior",
-            "description": "Cintura pélvica formada por ilion, isquion y pubis. Conecta el miembro posterior con la columna vertebral.",
-            "image_url": BASE_SKELETON_IMG,
-            "highlight_color": "Rojo"
+            "description": "Hueso de la cadera que conecta con el sacro.",
+            "image_url": BASE_IMG,
+            "highlight_color": "Rojo",
+            "marker_x": 72,
+            "marker_y": 30
         },
         {
             "id": "femur_01",
             "name": "Fémur",
-            "name_latin": "Femur",
             "region": "extremidad_posterior",
-            "description": "Hueso más largo y fuerte del cuerpo. Está en la parte superior del miembro posterior, entre cadera y rodilla.",
-            "image_url": BASE_SKELETON_IMG,
-            "highlight_color": "Azul"
+            "description": "Hueso del muslo, el más largo y fuerte del cuerpo.",
+            "image_url": BASE_IMG,
+            "highlight_color": "Azul",
+            "marker_x": 78,
+            "marker_y": 42
         },
         {
             "id": "patella_01",
-            "name": "Rótula",
-            "name_latin": "Patella",
+            "name": "Rótula (Patella)",
             "region": "extremidad_posterior",
-            "description": "Hueso sesamoideo que protege la articulación de la rodilla (babilla). Ubicado en la parte frontal de la rodilla.",
-            "image_url": BASE_SKELETON_IMG,
-            "highlight_color": "Verde"
+            "description": "Hueso de la rodilla verdadera (babilla).",
+            "image_url": BASE_IMG,
+            "highlight_color": "Verde",
+            "marker_x": 72,
+            "marker_y": 50
         },
         {
             "id": "tibia_01",
             "name": "Tibia",
-            "name_latin": "Tibia",
             "region": "extremidad_posterior",
-            "description": "Hueso principal de la pierna, entre la rodilla (babilla) y el tarso (corvejón). Hueso largo y fuerte.",
-            "image_url": BASE_SKELETON_IMG,
-            "highlight_color": "Amarillo"
+            "description": "Hueso de la pierna entre rodilla y corvejón.",
+            "image_url": BASE_IMG,
+            "highlight_color": "Amarillo",
+            "marker_x": 75,
+            "marker_y": 58
         },
         {
             "id": "tarsus_01",
             "name": "Tarso (Corvejón)",
-            "name_latin": "Tarsus",
             "region": "extremidad_posterior",
-            "description": "Conjunto de 6 huesos que forman el corvejón. Equivalente al tobillo humano. Articulación muy móvil.",
-            "image_url": BASE_SKELETON_IMG,
-            "highlight_color": "Naranja"
+            "description": "Articulación del corvejón, equivalente al tobillo.",
+            "image_url": BASE_IMG,
+            "highlight_color": "Naranja",
+            "marker_x": 78,
+            "marker_y": 68
         },
         {
-            "id": "metatarsal_01",
+            "id": "metatarsus_01",
             "name": "Metatarso",
-            "name_latin": "Os metatarsale III",
             "region": "extremidad_posterior",
-            "description": "Hueso de la caña en la extremidad posterior. Equivalente al metacarpo del miembro anterior.",
-            "image_url": BASE_SKELETON_IMG,
-            "highlight_color": "Morado"
+            "description": "Caña de la extremidad posterior.",
+            "image_url": BASE_IMG,
+            "highlight_color": "Morado",
+            "marker_x": 80,
+            "marker_y": 78
         }
     ],
     "torax": [
         {
             "id": "sternum_01",
             "name": "Esternón",
-            "name_latin": "Sternum",
             "region": "torax",
-            "description": "Hueso plano en la línea media ventral del tórax. Las costillas verdaderas se unen aquí mediante cartílagos.",
-            "image_url": BASE_SKELETON_IMG,
-            "highlight_color": "Rojo"
+            "description": "Hueso plano en la parte inferior del pecho.",
+            "image_url": BASE_IMG,
+            "highlight_color": "Rojo",
+            "marker_x": 35,
+            "marker_y": 65
         },
         {
             "id": "ribs_01",
             "name": "Costillas",
-            "name_latin": "Costae",
             "region": "torax",
-            "description": "18 pares de costillas que forman la caja torácica. Protegen corazón y pulmones. 8 verdaderas y 10 falsas.",
-            "image_url": BASE_SKELETON_IMG,
-            "highlight_color": "Azul"
+            "description": "18 pares que forman la caja torácica.",
+            "image_url": BASE_IMG,
+            "highlight_color": "Azul",
+            "marker_x": 42,
+            "marker_y": 45
         }
     ]
 }
 
 REGIONS = [
-    {"id": "cabeza", "name": "Cabeza", "description": "Cráneo, mandíbula y huesos faciales", "icon": "skull", "bone_count": len(HORSE_BONES["cabeza"])},
-    {"id": "columna_vertebral", "name": "Columna Vertebral", "description": "Vértebras cervicales, torácicas, lumbares y sacras", "icon": "spine", "bone_count": len(HORSE_BONES["columna_vertebral"])},
+    {"id": "cabeza", "name": "Cabeza", "description": "Cráneo y mandíbula", "icon": "skull", "bone_count": len(HORSE_BONES["cabeza"])},
+    {"id": "columna_vertebral", "name": "Columna Vertebral", "description": "Vértebras cervicales a sacras", "icon": "spine", "bone_count": len(HORSE_BONES["columna_vertebral"])},
     {"id": "torax", "name": "Tórax", "description": "Costillas y esternón", "icon": "ribs", "bone_count": len(HORSE_BONES["torax"])},
-    {"id": "extremidad_anterior", "name": "Extremidad Anterior", "description": "Escápula, húmero, radio, carpo y metacarpo", "icon": "arm", "bone_count": len(HORSE_BONES["extremidad_anterior"])},
-    {"id": "extremidad_posterior", "name": "Extremidad Posterior", "description": "Pelvis, fémur, tibia, tarso y metatarso", "icon": "leg", "bone_count": len(HORSE_BONES["extremidad_posterior"])}
+    {"id": "extremidad_anterior", "name": "Extremidad Anterior", "description": "Del hombro al casco", "icon": "arm", "bone_count": len(HORSE_BONES["extremidad_anterior"])},
+    {"id": "extremidad_posterior", "name": "Extremidad Posterior", "description": "De la cadera al casco", "icon": "leg", "bone_count": len(HORSE_BONES["extremidad_posterior"])}
 ]
 
 @api_router.get("/")
 async def root():
-    return {"message": "VetBones API - Sistema Óseo Veterinario"}
+    return {"message": "VetBones API"}
 
 @api_router.get("/animals")
 async def get_animals():
     return [
-        {"id": "horse", "name": "Caballo", "name_scientific": "Equus caballus", "description": "Sistema óseo equino completo con 205 huesos", "icon": "horse", "total_bones": 205, "available": True},
-        {"id": "cow", "name": "Vaca", "name_scientific": "Bos taurus", "description": "Próximamente disponible", "icon": "cow", "total_bones": 207, "available": False},
-        {"id": "pig", "name": "Cerdo", "name_scientific": "Sus scrofa domesticus", "description": "Próximamente disponible", "icon": "pig", "total_bones": 223, "available": False}
+        {"id": "horse", "name": "Caballo", "name_scientific": "Equus caballus", "description": "Sistema óseo equino", "icon": "horse", "total_bones": 205, "available": True},
+        {"id": "cow", "name": "Vaca", "name_scientific": "Bos taurus", "description": "Próximamente", "icon": "cow", "total_bones": 207, "available": False},
+        {"id": "pig", "name": "Cerdo", "name_scientific": "Sus scrofa", "description": "Próximamente", "icon": "pig", "total_bones": 223, "available": False}
     ]
 
 @api_router.get("/regions/{animal_id}")
@@ -324,7 +330,9 @@ async def generate_exam(animal_id: str, region_id: str, num_questions: int = 5):
             options=options,
             correct_answer=correct_answer,
             highlight_description=bone["description"],
-            highlight_color=bone["highlight_color"]
+            highlight_color=bone["highlight_color"],
+            marker_x=bone["marker_x"],
+            marker_y=bone["marker_y"]
         )
         questions.append(question)
     
@@ -350,17 +358,9 @@ async def get_bone_detail(bone_id: str):
     raise HTTPException(status_code=404, detail="Hueso no encontrado")
 
 app.include_router(api_router)
+app.add_middleware(CORSMiddleware, allow_credentials=True, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_credentials=True,
-    allow_origins=["*"],
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO)
 
 @app.on_event("shutdown")
 async def shutdown_db_client():
