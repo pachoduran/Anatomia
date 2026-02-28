@@ -525,7 +525,7 @@ const styles = StyleSheet.create({
   },
   boneImage: {
     width: '100%',
-    height: 200,
+    height: 350,
   },
   imageOverlay: {
     position: 'absolute',
