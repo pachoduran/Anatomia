@@ -546,12 +546,12 @@ const styles = StyleSheet.create({
     fontSize: 13,
   },
   optionsContainer: {
-    marginBottom: 16,
+    marginBottom: 8,
   },
   optionsTitle: {
-    fontSize: 14,
+    fontSize: 12,
     color: '#888',
-    marginBottom: 12,
+    marginBottom: 8,
   },
   option: {
     flexDirection: 'row',
