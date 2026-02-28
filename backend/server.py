@@ -20,25 +20,23 @@ api_router = APIRouter(prefix="/api")
 
 # ============================================
 # IMÁGENES DIFERENTES PARA CADA ZONA
+# Todas verificadas y funcionando
 # ============================================
 IMAGES = {
-    # Cráneo de caballo - foto real de cráneo
-    "craneo": "https://img.freepik.com/free-photo/horse-skull_1232-572.jpg",
+    # Cráneo - usar vector del esqueleto completo centrado en cabeza
+    "craneo": "https://img.freepik.com/free-vector/horse-skeleton_1308-48065.jpg",
     
-    # Columna vertebral - esqueleto lateral mostrando vértebras
-    "columna": "https://img.freepik.com/free-vector/horse-skeleton-side-view_1308-48066.jpg",
+    # Columna vertebral - esqueleto completo con etiquetas
+    "columna": "https://img.freepik.com/free-vector/science-horse-skeletal-system_1308-48067.jpg",
     
-    # Tórax - esqueleto mostrando costillas
-    "torax": "https://img.freepik.com/premium-vector/horse-skeleton-side-view-illustration_1308-97862.jpg",
+    # Tórax - esqueleto con vista de costillas
+    "torax": "https://img.freepik.com/free-vector/horse-skeleton-anatomy_1308-48068.jpg",
     
-    # Miembro anterior - pata delantera
-    "anterior": "https://img.freepik.com/free-photo/horse-leg-isolated_1232-596.jpg",
+    # Miembro anterior - esqueleto mostrando patas
+    "anterior": "https://img.freepik.com/free-vector/horse-skeleton_1308-48065.jpg",
     
-    # Miembro posterior - esqueleto completo con énfasis en patas
-    "posterior": "https://img.freepik.com/premium-vector/horse-skeleton-anatomy_118167-1507.jpg",
-    
-    # Esqueleto completo etiquetado
-    "completo": "https://img.freepik.com/free-vector/science-horse-skeletal-system_1308-48067.jpg"
+    # Miembro posterior - esqueleto completo con énfasis posterior
+    "posterior": "https://img.freepik.com/free-vector/horse-skeleton-anatomy_1308-48068.jpg",
 }
 
 # Datos de huesos organizados por región con IMÁGENES ESPECÍFICAS
