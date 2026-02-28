@@ -126,11 +126,14 @@ backend:
     file: "server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: true
         agent: "main"
         comment: "Retorna 5 regiones anatómicas del caballo: cabeza, columna vertebral, tórax, extremidad anterior y posterior"
+      - working: true
+        agent: "testing"
+        comment: "TESTED: Returns 5 regions (cabeza, columna_vertebral, torax, extremidad_anterior, extremidad_posterior) with bone_count field. Status 200 OK. Error case 404 for invalid animal working."
 
   - task: "GET /api/exam/{animal_id}/{region_id} - Generar examen de selección múltiple"
     implemented: true
@@ -138,11 +141,14 @@ backend:
     file: "server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: true
         agent: "main"
         comment: "Genera examen con preguntas aleatorias, opciones múltiples y respuestas correctas para la región seleccionada"
+      - working: true
+        agent: "testing"
+        comment: "TESTED: Generates exam with requested num_questions parameter (tested with 3 questions). Each question has image_url, 4 options, correct_answer in options. All fields validated."
 
   - task: "GET /api/bones/{animal_id}/{region_id} - Obtener huesos por región"
     implemented: true
@@ -150,11 +156,26 @@ backend:
     file: "server.py"
     stuck_count: 0
     priority: "medium"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: true
         agent: "main"
         comment: "Retorna lista de huesos con nombre, descripción, imagen URL para cada región"
+      - working: true
+        agent: "testing"
+        comment: "TESTED: Returns bones list with all required fields (id, name, region, description, image_url). Tested multiple regions (extremidad_anterior: 6 bones, torax: 3 bones)."
+
+  - task: "GET /api/bone/{bone_id} - Obtener detalle de hueso específico"
+    implemented: true
+    working: true
+    file: "server.py"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "TESTED: Returns bone detail with all required fields. Tested with scapula_01 bone. Status 200 OK."
 
 frontend:
   - task: "Pantalla principal - Selección de animal"
