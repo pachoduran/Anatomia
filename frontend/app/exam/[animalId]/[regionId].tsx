@@ -127,6 +127,19 @@ export default function ExamScreen() {
     fetchExam();
   };
 
+  // Convertir nombre de color en español a código hex
+  const getColorHex = (colorName: string): string => {
+    const colors: { [key: string]: string } = {
+      'Rojo': '#FF4444',
+      'Azul': '#4488FF',
+      'Verde': '#44DD44',
+      'Amarillo': '#FFDD00',
+      'Naranja': '#FF8800',
+      'Morado': '#AA44FF',
+    };
+    return colors[colorName] || '#FF4444';
+  };
+
   const getOptionStyle = (option: string, currentQuestion: Question) => {
     if (!showResult) {
       return option === selectedAnswer ? styles.optionSelected : styles.option;
