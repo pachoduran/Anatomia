@@ -234,19 +234,18 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   animalGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
+    flexDirection: 'column',
+    gap: 12,
   },
   animalCard: {
-    width: cardWidth,
+    width: '100%',
     backgroundColor: '#16213e',
     borderRadius: 16,
     padding: 20,
-    marginBottom: 16,
     alignItems: 'center',
     borderWidth: 1,
     borderColor: '#2a2a4a',
+    flexDirection: 'row',
   },
   animalCardDisabled: {
     opacity: 0.6,
