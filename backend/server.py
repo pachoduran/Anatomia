@@ -33,7 +33,7 @@ class Bone(BaseModel):
     region: str
     description: str
     image_url: str
-    highlight_color: str = "#FF6B6B"
+    highlight_color: str = "Rojo"
 
 class Question(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
@@ -59,7 +59,7 @@ class Region(BaseModel):
     icon: str
     bone_count: int
 
-# Horse skeletal data organized by region
+# Horse skeletal data organized by region with Spanish color names
 HORSE_BONES = {
     "cabeza": [
         {
@@ -69,7 +69,7 @@ HORSE_BONES = {
             "region": "cabeza",
             "description": "Estructura ósea que protege el cerebro y los órganos sensoriales.",
             "image_url": "https://vorl.vetmed.ucdavis.edu/sites/g/files/dgvnsk4731/files/styles/sf_gallery_full/public/media/images/1eqscapulaposter%20a.png",
-            "highlight_color": "#FF6B6B"
+            "highlight_color": "Rojo"
         },
         {
             "id": "mandible_01",
@@ -78,7 +78,7 @@ HORSE_BONES = {
             "region": "cabeza",
             "description": "Hueso móvil inferior de la cabeza que permite la masticación.",
             "image_url": "https://vorl.vetmed.ucdavis.edu/sites/g/files/dgvnsk4731/files/styles/sf_gallery_full/public/media/images/1eqscapulaposter%20a.png",
-            "highlight_color": "#4ECDC4"
+            "highlight_color": "Azul"
         },
         {
             "id": "maxilla_01",
@@ -87,7 +87,7 @@ HORSE_BONES = {
             "region": "cabeza",
             "description": "Hueso superior de la mandíbula que forma parte del paladar.",
             "image_url": "https://vorl.vetmed.ucdavis.edu/sites/g/files/dgvnsk4731/files/styles/sf_gallery_full/public/media/images/1eqscapulaposter%20a.png",
-            "highlight_color": "#45B7D1"
+            "highlight_color": "Verde"
         },
         {
             "id": "nasal_01",
@@ -96,7 +96,7 @@ HORSE_BONES = {
             "region": "cabeza",
             "description": "Par de huesos que forman el puente de la nariz.",
             "image_url": "https://vorl.vetmed.ucdavis.edu/sites/g/files/dgvnsk4731/files/styles/sf_gallery_full/public/media/images/1eqscapulaposter%20a.png",
-            "highlight_color": "#96CEB4"
+            "highlight_color": "Amarillo"
         }
     ],
     "columna_vertebral": [
@@ -107,7 +107,7 @@ HORSE_BONES = {
             "region": "columna_vertebral",
             "description": "7 vértebras que forman el cuello, permiten el movimiento de la cabeza.",
             "image_url": "https://img.freepik.com/free-vector/science-horse-skeletal-system_1308-48067.jpg",
-            "highlight_color": "#FF6B6B"
+            "highlight_color": "Rojo"
         },
         {
             "id": "thoracic_01",
@@ -116,7 +116,7 @@ HORSE_BONES = {
             "region": "columna_vertebral",
             "description": "18 vértebras que se articulan con las costillas.",
             "image_url": "https://img.freepik.com/free-vector/science-horse-skeletal-system_1308-48067.jpg",
-            "highlight_color": "#4ECDC4"
+            "highlight_color": "Azul"
         },
         {
             "id": "lumbar_01",
@@ -125,7 +125,7 @@ HORSE_BONES = {
             "region": "columna_vertebral",
             "description": "6 vértebras en la región del lomo, sin articulación costal.",
             "image_url": "https://img.freepik.com/free-vector/science-horse-skeletal-system_1308-48067.jpg",
-            "highlight_color": "#45B7D1"
+            "highlight_color": "Verde"
         },
         {
             "id": "sacral_01",
@@ -134,7 +134,7 @@ HORSE_BONES = {
             "region": "columna_vertebral",
             "description": "5 vértebras fusionadas que forman el sacro.",
             "image_url": "https://img.freepik.com/free-vector/science-horse-skeletal-system_1308-48067.jpg",
-            "highlight_color": "#96CEB4"
+            "highlight_color": "Amarillo"
         },
         {
             "id": "caudal_01",
@@ -143,7 +143,7 @@ HORSE_BONES = {
             "region": "columna_vertebral",
             "description": "15-21 vértebras que forman la cola.",
             "image_url": "https://img.freepik.com/free-vector/science-horse-skeletal-system_1308-48067.jpg",
-            "highlight_color": "#FFEAA7"
+            "highlight_color": "Naranja"
         }
     ],
     "extremidad_anterior": [
@@ -154,7 +154,7 @@ HORSE_BONES = {
             "region": "extremidad_anterior",
             "description": "Hueso plano triangular que conecta el miembro anterior con el tronco.",
             "image_url": "https://vorl.vetmed.ucdavis.edu/sites/g/files/dgvnsk4731/files/styles/sf_gallery_full/public/media/images/1eqscapulaposter%20a.png",
-            "highlight_color": "#FF6B6B"
+            "highlight_color": "Rojo"
         },
         {
             "id": "humerus_01",
@@ -163,7 +163,7 @@ HORSE_BONES = {
             "region": "extremidad_anterior",
             "description": "Hueso largo del brazo, se articula con escápula y radio.",
             "image_url": "https://vorl.vetmed.ucdavis.edu/sites/g/files/dgvnsk4731/files/styles/sf_gallery_full/public/media/images/2eqhumerusposter%20a.png",
-            "highlight_color": "#4ECDC4"
+            "highlight_color": "Azul"
         },
         {
             "id": "radius_01",
@@ -172,7 +172,7 @@ HORSE_BONES = {
             "region": "extremidad_anterior",
             "description": "Hueso principal del antebrazo, soporta la mayor parte del peso.",
             "image_url": "https://vorl.vetmed.ucdavis.edu/sites/g/files/dgvnsk4731/files/styles/sf_gallery_full/public/media/images/3EqRadiusUlnaposter%20a.png",
-            "highlight_color": "#45B7D1"
+            "highlight_color": "Verde"
         },
         {
             "id": "ulna_01",
@@ -181,7 +181,7 @@ HORSE_BONES = {
             "region": "extremidad_anterior",
             "description": "Hueso fusionado con el radio en equinos adultos, forma el olécranon.",
             "image_url": "https://vorl.vetmed.ucdavis.edu/sites/g/files/dgvnsk4731/files/styles/sf_gallery_full/public/media/images/3EqRadiusUlnaposter%20a.png",
-            "highlight_color": "#96CEB4"
+            "highlight_color": "Amarillo"
         },
         {
             "id": "carpus_01",
@@ -190,7 +190,7 @@ HORSE_BONES = {
             "region": "extremidad_anterior",
             "description": "8 huesos pequeños que forman la rodilla del caballo.",
             "image_url": "https://vorl.vetmed.ucdavis.edu/sites/g/files/dgvnsk4731/files/styles/sf_gallery_full/public/media/images/3EqRadiusUlnaposter%20a.png",
-            "highlight_color": "#FFEAA7"
+            "highlight_color": "Naranja"
         },
         {
             "id": "metacarpal_01",
@@ -199,7 +199,7 @@ HORSE_BONES = {
             "region": "extremidad_anterior",
             "description": "Hueso largo entre el carpo y las falanges, también llamado caña.",
             "image_url": "https://vorl.vetmed.ucdavis.edu/sites/g/files/dgvnsk4731/files/styles/sf_gallery_full/public/media/images/3EqRadiusUlnaposter%20a.png",
-            "highlight_color": "#DDA0DD"
+            "highlight_color": "Morado"
         }
     ],
     "extremidad_posterior": [
@@ -210,7 +210,7 @@ HORSE_BONES = {
             "region": "extremidad_posterior",
             "description": "Cintura pélvica formada por ilion, isquion y pubis.",
             "image_url": "https://vorl.vetmed.ucdavis.edu/sites/g/files/dgvnsk4731/files/styles/sf_gallery_full/public/media/images/17eqfemurposter%20a.png",
-            "highlight_color": "#FF6B6B"
+            "highlight_color": "Rojo"
         },
         {
             "id": "femur_01",
@@ -219,7 +219,7 @@ HORSE_BONES = {
             "region": "extremidad_posterior",
             "description": "Hueso más largo y fuerte del cuerpo, forma la articulación de la cadera.",
             "image_url": "https://vorl.vetmed.ucdavis.edu/sites/g/files/dgvnsk4731/files/styles/sf_gallery_full/public/media/images/17eqfemurposter%20a.png",
-            "highlight_color": "#4ECDC4"
+            "highlight_color": "Azul"
         },
         {
             "id": "patella_01",
@@ -228,7 +228,7 @@ HORSE_BONES = {
             "region": "extremidad_posterior",
             "description": "Hueso sesamoideo que protege la articulación de la rodilla.",
             "image_url": "https://vorl.vetmed.ucdavis.edu/sites/g/files/dgvnsk4731/files/styles/sf_gallery_full/public/media/images/17eqfemurposter%20a.png",
-            "highlight_color": "#45B7D1"
+            "highlight_color": "Verde"
         },
         {
             "id": "tibia_01",
@@ -237,7 +237,7 @@ HORSE_BONES = {
             "region": "extremidad_posterior",
             "description": "Hueso principal de la pierna, entre la rodilla y el tarso.",
             "image_url": "https://vorl.vetmed.ucdavis.edu/sites/g/files/dgvnsk4731/files/styles/sf_gallery_full/public/media/images/17eqfemurposter%20a.png",
-            "highlight_color": "#96CEB4"
+            "highlight_color": "Amarillo"
         },
         {
             "id": "tarsus_01",
@@ -246,7 +246,7 @@ HORSE_BONES = {
             "region": "extremidad_posterior",
             "description": "6 huesos que forman el corvejón, equivalente al tobillo humano.",
             "image_url": "https://vorl.vetmed.ucdavis.edu/sites/g/files/dgvnsk4731/files/styles/sf_gallery_full/public/media/images/17eqfemurposter%20a.png",
-            "highlight_color": "#FFEAA7"
+            "highlight_color": "Naranja"
         },
         {
             "id": "metatarsal_01",
@@ -255,7 +255,7 @@ HORSE_BONES = {
             "region": "extremidad_posterior",
             "description": "Hueso largo equivalente a la caña en la extremidad posterior.",
             "image_url": "https://vorl.vetmed.ucdavis.edu/sites/g/files/dgvnsk4731/files/styles/sf_gallery_full/public/media/images/17eqfemurposter%20a.png",
-            "highlight_color": "#DDA0DD"
+            "highlight_color": "Morado"
         }
     ],
     "torax": [
@@ -266,7 +266,7 @@ HORSE_BONES = {
             "region": "torax",
             "description": "Hueso plano en la línea media ventral del tórax.",
             "image_url": "https://img.freepik.com/free-vector/science-horse-skeletal-system_1308-48067.jpg",
-            "highlight_color": "#FF6B6B"
+            "highlight_color": "Rojo"
         },
         {
             "id": "ribs_01",
@@ -275,7 +275,7 @@ HORSE_BONES = {
             "region": "torax",
             "description": "18 pares de costillas que protegen los órganos torácicos.",
             "image_url": "https://img.freepik.com/free-vector/science-horse-skeletal-system_1308-48067.jpg",
-            "highlight_color": "#4ECDC4"
+            "highlight_color": "Azul"
         },
         {
             "id": "costal_cartilage_01",
@@ -284,7 +284,7 @@ HORSE_BONES = {
             "region": "torax",
             "description": "Cartílagos que conectan las costillas con el esternón.",
             "image_url": "https://img.freepik.com/free-vector/science-horse-skeletal-system_1308-48067.jpg",
-            "highlight_color": "#45B7D1"
+            "highlight_color": "Verde"
         }
     ]
 }
@@ -421,7 +421,7 @@ async def generate_exam(animal_id: str, region_id: str, num_questions: int = 5):
             image_url=bone["image_url"],
             options=options,
             correct_answer=correct_answer,
-            highlight_description=f"Identifica el hueso señalado en color {bone['highlight_color'].replace('#', '')}: {bone['description']}"
+            highlight_description=f"Identifica el hueso señalado en color {bone['highlight_color']}: {bone['description']}"
         )
         questions.append(question)
     
