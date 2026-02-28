@@ -28,6 +28,8 @@ interface Question {
   correct_answer: string;
   highlight_description: string;
   highlight_color: string;
+  marker_x: number;
+  marker_y: number;
 }
 
 interface Exam {
