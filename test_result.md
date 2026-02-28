@@ -111,11 +111,14 @@ backend:
     file: "server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: true
         agent: "main"
         comment: "Endpoint implementado, retorna lista de animales con caballo disponible y vaca/cerdo como próximamente"
+      - working: true
+        agent: "testing"
+        comment: "TESTED: Returns 3 animals (horse available=True, cow/pig available=False). Status 200 OK. All required fields present."
 
   - task: "GET /api/regions/{animal_id} - Obtener regiones anatómicas"
     implemented: true
