@@ -23,7 +23,7 @@ api_router = APIRouter(prefix="/api")
 
 # Imágenes por región anatómica
 IMAGES = {
-    "craneo": "https://cdn.britannica.com/49/129149-050-32311D6A/skull-Horse.jpg",
+    "craneo": "https://img.freepik.com/free-vector/science-horse-skeletal-system_1308-48067.jpg",
     "columna": "https://img.freepik.com/free-vector/science-horse-skeletal-system_1308-48067.jpg",
     "torax": "https://img.freepik.com/free-vector/science-horse-skeletal-system_1308-48067.jpg",
     "miembro_anterior": "https://img.freepik.com/free-vector/science-horse-skeletal-system_1308-48067.jpg",
