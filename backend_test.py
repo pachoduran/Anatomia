@@ -278,9 +278,10 @@ class VetBonesAPITester:
         loaded_images = []
         
         for image_file in image_files:
-            success, data = self.make_request(f"/api/assets/{image_file}")
+            success, data = self.make_request(f"/api/assets/{image_file}", expect_json=False)
             if success:
                 loaded_images.append(image_file)
+                self.log_result(f"GET /api/assets/{image_file}", True, str(data))
             else:
                 all_success = False
                 self.log_result(f"GET /api/assets/{image_file}", False, data)
