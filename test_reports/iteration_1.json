@@ -55,7 +55,9 @@
   },
   "test_report_links": [],
   "action_items": [],
-  "critical_code_review_comments": [],
+  "critical_code_review_comments": [
+    "Minor: Expo shows WARN messages for SafeScreen.tsx, data.ts, and ExamShared.tsx files in /app directory - these are not route files but Expo treats them as such. Consider moving these to a separate /utils or /components directory outside the app folder to avoid the warnings."
+  ],
   "updated_files": [],
   "success_rate": {
     "backend": "N/A - Backend testing skipped per request",
