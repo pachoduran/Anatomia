@@ -74,6 +74,7 @@ export default function ExamScreen() {
       setLoading(true);
       const res = await fetch(`${BACKEND_URL}/api/exam/${animalId}/${divisionId}/${regionId}?num=5`);
       const data = await res.json();
+      if (data.image?.startsWith('/')) data.image = `${BACKEND_URL}${data.image}`;
       setExam(data);
       setIdx(0);
       setSelected(null);

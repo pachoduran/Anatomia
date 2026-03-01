@@ -40,7 +40,7 @@ export default function RegionsScreen() {
     try {
       const res = await fetch(`${BACKEND_URL}/api/regions/${animalId}/${divisionId}`);
       const data = await res.json();
-      setRegions(data);
+      setRegions(data.map((r: any) => ({ ...r, image: r.image?.startsWith('/') ? `${BACKEND_URL}${r.image}` : r.image })));
     } catch (e) {
       console.error(e);
     } finally {

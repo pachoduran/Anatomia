@@ -65,6 +65,7 @@ export default function StudyScreen() {
     try {
       const res = await fetch(`${BACKEND_URL}/api/study/${animalId}/${divisionId}/${regionId}`);
       const json = await res.json();
+      if (json.image?.startsWith('/')) json.image = `${BACKEND_URL}${json.image}`;
       setData(json);
     } catch (e) {
       console.error(e);
