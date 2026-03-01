@@ -9,6 +9,7 @@ Mobile application in Spanish for veterinary students to study the skeletal syst
 - **Multi-View System**: Complex regions have multiple anatomical views (dorsal, ventral, lateral, etc.)
 - **Offline-First**: All data and images bundled locally, no backend required
 - **Safe Area UI**: Proper handling of device notches and system bars
+- **Anatomical Dictionary**: Glossary + Mini-Quiz for anatomical direction terminology
 
 ## Architecture
 - **Framework**: Expo (React Native) with expo-router (file-based routing)
@@ -22,15 +23,12 @@ Mobile application in Spanish for veterinary students to study the skeletal syst
 - Full offline migration from backend to frontend-only
 - Skull multi-view feature (5 views: Dorsal, Ventral, Lateral, Caudal, Rostral)
 - Safe area layout fix with `react-native-safe-area-context`
-- Dynamic region count on home page
-- **NEW REGIONS ADDED (Feb 2026)**:
-  - **A. Cabeza y Cuello**: 4 views (Lateral, Dorsal, Ventral, Nucal) - Focus on atlanto-occipital joint
-  - **B. El Tronco (Barril y Dorso)**: 2 views (Dorsal, Lateral) - Focus on Cruz, ribs, thoracic/lumbar spine
-  - **C. Extremidades subdivided**:
-    - Encuentro y Espalda (Scapula + Humerus)
-    - Brazo y Antebrazo (Radius + Ulna)
-    - Carpo/Tarso: 2 views (Dorsal, Palmar/Plantar)
-    - Region del Dedo: 2 views (Dorsopalmar, Oblicua)
+- Dynamic region count on home page (11 regions)
+- **NEW REGIONS (Feb 2026)**:
+  - A. Cabeza y Cuello: 4 views (Lateral, Dorsal, Ventral, Nucal)
+  - B. El Tronco (Barril y Dorso): 2 views (Dorsal, Lateral)
+  - C. Extremidades: Encuentro y Espalda, Brazo y Antebrazo, Carpo/Tarso (2 views), Region del Dedo (2 views)
+- **DICTIONARY (Feb 2026)**: Glossary + Mini-Quiz for 8 anatomical terms (Proximal, Distal, Medial, Lateral, Dorsal, Ventral, Craneal, Caudal) with reference image
 
 ### Total Regions: 11
 - Axial (5): Craneo y Cara, Cabeza y Cuello, El Tronco, Columna Vertebral, Caja Toracica
@@ -40,12 +38,13 @@ Mobile application in Spanish for veterinary students to study the skeletal syst
 - P1: Expand to other animals
 - P2: User registration and progress tracking
 - P2: Delete obsolete backend directory
-- P3: Move non-route files (SafeScreen.tsx, ExamShared.tsx, data.ts) out of /app directory to avoid Expo warnings
+- P3: Move non-route files out of /app directory to avoid Expo warnings
 
 ## Key Files
 - `frontend/app/data.ts` - All anatomical data
-- `frontend/app/localImages.ts` - Image mappings
+- `frontend/app/localImages.ts` - Image mappings (17 new images added)
+- `frontend/app/dictionary.tsx` - Dictionary screen (Glossary + Mini-Quiz)
 - `frontend/app/SafeScreen.tsx` - Safe area wrapper
 - `frontend/app/ExamShared.tsx` - Quiz component
 - `frontend/app/_layout.tsx` - Root layout
-- `frontend/app/index.tsx` - Home screen
+- `frontend/app/index.tsx` - Home screen with dictionary access
