@@ -5,6 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { getRegion } from '../../../data';
 import { getLocalImage } from '../../../localImages';
+import { SafeScreen } from '../../../SafeScreen';
 
 const ICONS: Record<string, string> = { dorsal: 'arrow-up-circle', ventral: 'arrow-down-circle', lateral: 'arrow-forward-circle', caudal: 'arrow-back-circle', rostral: 'eye' };
 
@@ -16,7 +17,7 @@ export default function ViewsScreen() {
   if (!region?.views) return <View style={s.center}><Text style={s.err}>Sin vistas</Text></View>;
 
   return (
-    <View style={s.container}>
+    <SafeScreen>
       <View style={s.header}>
         <TouchableOpacity style={s.backBtn} onPress={() => router.back()}>
           <Ionicons name="arrow-back" size={22} color="#fff" />
@@ -54,13 +55,11 @@ export default function ViewsScreen() {
           </View>
         ))}
       </ScrollView>
-    </View>
+    </SafeScreen>
   );
 }
 
-const TOP = Platform.OS === 'android' ? 30 : 0;
 const s = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#1a1a2e', paddingTop: TOP },
   center: { flex: 1, backgroundColor: '#1a1a2e', justifyContent: 'center', alignItems: 'center' },
   err: { color: '#FF6B6B', fontSize: 16 },
   header: { flexDirection: 'row', alignItems: 'center', padding: 10, borderBottomWidth: 1, borderBottomColor: '#2a2a4a' },
