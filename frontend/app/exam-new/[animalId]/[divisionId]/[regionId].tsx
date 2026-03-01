@@ -14,6 +14,7 @@ import {
 import { Image } from 'expo-image';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter, useLocalSearchParams } from 'expo-router';
+import { getLocalImage } from '../../../localImages';
 
 const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
 const { width } = Dimensions.get('window');
@@ -218,7 +219,7 @@ export default function ExamScreen() {
           
           <View style={styles.imageWrapper}>
             <Image
-              source={{ uri: exam.image }}
+              source={getLocalImage(regionId as string) || { uri: exam.image }}
               style={styles.skeletonImage}
               contentFit="contain"
             />
