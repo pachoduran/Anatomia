@@ -5,13 +5,14 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { ANIMALS } from './data';
 import { getLocalImage } from './localImages';
+import { SafeScreen } from './SafeScreen';
 
 export default function HomeScreen() {
   const router = useRouter();
   const horse = ANIMALS[0];
 
   return (
-    <View style={s.container}>
+    <SafeScreen>
       <ScrollView contentContainerStyle={s.content}>
         <Text style={s.title}>VetBones</Text>
         <Text style={s.subtitle}>Sistema Óseo Veterinario</Text>
@@ -34,14 +35,12 @@ export default function HomeScreen() {
           </View>
         </TouchableOpacity>
       </ScrollView>
-    </View>
+    </SafeScreen>
   );
 }
 
-const TOP = Platform.OS === 'android' ? 30 : 0;
 const s = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#1a1a2e', paddingTop: TOP },
-  content: { padding: 16, paddingBottom: 40 },
+  content: { padding: 16, paddingBottom: 20 },
   title: { fontSize: 28, fontWeight: 'bold', color: '#fff', textAlign: 'center' },
   subtitle: { fontSize: 14, color: '#4ECDC4', textAlign: 'center', marginBottom: 20 },
   statsRow: { flexDirection: 'row', justifyContent: 'space-around', marginBottom: 20 },
