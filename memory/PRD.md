@@ -20,7 +20,7 @@ Mobile application in Spanish for veterinary students to study the skeletal syst
 - **Data**: Hardcoded Python dictionary (no database yet)
 - **Images**: AI-generated with Gemini Nano Banana, served as static assets
 
-## What's Implemented (Feb 28, 2026)
+## What's Implemented (Mar 1, 2026)
 - ✅ Full-stack scaffolding (Expo + FastAPI)
 - ✅ Hierarchical data structure for 205 horse bones
 - ✅ Multi-level navigation (Home → Division → Region → Quiz)
@@ -30,7 +30,9 @@ Mobile application in Spanish for veterinary students to study the skeletal syst
 - ✅ Static image serving from /api/assets/
 - ✅ API field alignment between frontend and backend
 - ✅ Thorax image generated (was missing)
-- ✅ Duplicate file cleanup ([subdivisionId].tsx removed)
+- ✅ Quiz distractors contextualized to same anatomical region
+- ✅ Study Mode: explore all bones on image without quiz pressure
+- ✅ Dual navigation: "Estudiar" (study) + "Examen" (quiz) per region
 
 ## API Endpoints
 - GET /api/animals - List available animals
