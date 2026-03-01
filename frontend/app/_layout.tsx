@@ -14,6 +14,7 @@ export default function Layout() {
         <Stack.Screen name="views/[animalId]/[divisionId]/[regionId]" />
         <Stack.Screen name="study-view/[animalId]/[divisionId]/[regionId]/[viewId]" />
         <Stack.Screen name="exam-view/[animalId]/[divisionId]/[regionId]/[viewId]" />
+        <Stack.Screen name="dictionary" />
       </Stack>
     </SafeAreaProvider>
   );

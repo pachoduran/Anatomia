@@ -23,7 +23,7 @@ export default function HomeScreen() {
           <View style={s.stat}><Text style={s.statNum}>{horse.divisions.reduce((acc, d) => acc + d.regions.length, 0)}</Text><Text style={s.statLabel}>Regiones</Text></View>
         </View>
 
-        <TouchableOpacity style={s.card} onPress={() => router.push(`/divisions/${horse.id}`)}>
+        <TouchableOpacity data-testid="horse-card" style={s.card} onPress={() => router.push(`/divisions/${horse.id}`)}>
           <Image source={getLocalImage('craneo')} style={s.cardImg} contentFit="cover" />
           <View style={s.cardOverlay}>
             <Ionicons name="paw" size={28} color="#fff" />
@@ -33,6 +33,17 @@ export default function HomeScreen() {
             <Text style={s.cardSci}>{horse.nameScientific}</Text>
             <Text style={s.cardBones}>{horse.totalBones} huesos</Text>
           </View>
+        </TouchableOpacity>
+
+        <TouchableOpacity data-testid="dictionary-btn" style={s.dictBtn} onPress={() => router.push('/dictionary')}>
+          <View style={s.dictIcon}>
+            <Ionicons name="book" size={22} color="#FFEAA7" />
+          </View>
+          <View style={s.dictInfo}>
+            <Text style={s.dictTitle}>Diccionario Anatomico</Text>
+            <Text style={s.dictDesc}>Terminologia y direcciones anatomicas</Text>
+          </View>
+          <Ionicons name="chevron-forward" size={20} color="#888" />
         </TouchableOpacity>
       </ScrollView>
     </SafeScreen>
