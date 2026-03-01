@@ -123,7 +123,7 @@ async def root():
 
 @api_router.get("/animals")
 async def get_animals():
-    return [{"id": "horse", "name": "Caballo", "bones": 205, "available": True}]
+    return [{"id": "horse", "name": "Caballo", "name_scientific": "Equus caballus", "description": "Estudio completo del sistema óseo equino", "total_bones": 205, "bones": 205, "available": True}]
 
 @api_router.get("/divisions/{animal_id}")
 async def get_divisions(animal_id: str):
