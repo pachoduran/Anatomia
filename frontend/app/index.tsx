@@ -20,7 +20,7 @@ export default function HomeScreen() {
         <View style={s.statsRow}>
           <View style={s.stat}><Text style={s.statNum}>{horse.totalBones}</Text><Text style={s.statLabel}>Huesos</Text></View>
           <View style={s.stat}><Text style={s.statNum}>{horse.divisions.length}</Text><Text style={s.statLabel}>Divisiones</Text></View>
-          <View style={s.stat}><Text style={s.statNum}>5</Text><Text style={s.statLabel}>Regiones</Text></View>
+          <View style={s.stat}><Text style={s.statNum}>{horse.divisions.reduce((acc, d) => acc + d.regions.length, 0)}</Text><Text style={s.statLabel}>Regiones</Text></View>
         </View>
 
         <TouchableOpacity style={s.card} onPress={() => router.push(`/divisions/${horse.id}`)}>
