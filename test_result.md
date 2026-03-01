@@ -105,6 +105,18 @@
 user_problem_statement: "Aplicación móvil para estudiar el sistema óseo de animales (caballos), con exámenes de selección múltiple e imágenes anatómicas reales para veterinarios"
 
 backend:
+  - task: "GET /api/ - Welcome endpoint"
+    implemented: true
+    working: true
+    file: "server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "TESTED: Returns welcome message 'VetBones API - 205 huesos del caballo'. Status 200 OK."
+
   - task: "GET /api/animals - Listar animales disponibles"
     implemented: true
     working: true
@@ -119,6 +131,21 @@ backend:
       - working: true
         agent: "testing"
         comment: "TESTED: Returns 3 animals (horse available=True, cow/pig available=False). Status 200 OK. All required fields present."
+      - working: true
+        agent: "testing"
+        comment: "RETESTED: Returns horse with all required fields (id, name, name_scientific, total_bones=205, available=true). Status 200 OK."
+
+  - task: "GET /api/divisions/horse - Horse skeletal divisions"
+    implemented: true
+    working: true
+    file: "server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "TESTED: Returns 2 divisions (axial with 81 bones, apendicular with 120 bones) with all required fields including icons. Status 200 OK."
 
   - task: "GET /api/regions/{animal_id} - Obtener regiones anatómicas"
     implemented: true
