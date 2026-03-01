@@ -65,4 +65,9 @@ const s = StyleSheet.create({
   cardTitle: { fontSize: 20, fontWeight: 'bold', color: '#fff' },
   cardSci: { fontSize: 13, color: '#888', fontStyle: 'italic', marginTop: 2 },
   cardBones: { fontSize: 14, color: '#4ECDC4', marginTop: 6 },
+  dictBtn: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#16213e', borderRadius: 12, padding: 14, marginTop: 12, borderWidth: 1, borderColor: '#2a2a4a' },
+  dictIcon: { width: 40, height: 40, borderRadius: 10, backgroundColor: 'rgba(255,234,167,0.12)', justifyContent: 'center', alignItems: 'center', marginRight: 12 },
+  dictInfo: { flex: 1 },
+  dictTitle: { color: '#fff', fontSize: 15, fontWeight: '600' },
+  dictDesc: { color: '#888', fontSize: 12, marginTop: 2 },
 });
