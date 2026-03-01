@@ -14,6 +14,7 @@ import {
 import { Image } from 'expo-image';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter, useLocalSearchParams } from 'expo-router';
+import { getLocalImage } from '../../../localImages';
 
 const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
 const { width } = Dimensions.get('window');
@@ -127,7 +128,7 @@ export default function StudyScreen() {
         <View style={styles.imageCard}>
           <View style={styles.imageWrapper}>
             <Image
-              source={{ uri: data.image }}
+              source={getLocalImage(regionId as string) || { uri: data.image }}
               style={styles.anatomyImage}
               contentFit="contain"
             />
