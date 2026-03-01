@@ -14,7 +14,7 @@ import {
 import { Image } from 'expo-image';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter, useLocalSearchParams } from 'expo-router';
-import { getLocalImage } from '../../../localImages';
+import { getLocalImage } from '../../../../localImages';
 
 const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
 const { width } = Dimensions.get('window');
@@ -52,10 +52,11 @@ const COLORS: { [key: string]: string } = {
 
 export default function ExamScreen() {
   const router = useRouter();
-  const { animalId, divisionId, regionId } = useLocalSearchParams<{
+  const { animalId, divisionId, regionId, viewId } = useLocalSearchParams<{
     animalId: string;
     divisionId: string;
     regionId: string;
+    viewId: string;
   }>();
 
   const [exam, setExam] = useState<Exam | null>(null);
@@ -73,7 +74,7 @@ export default function ExamScreen() {
   const loadExam = async () => {
     try {
       setLoading(true);
-      const res = await fetch(`${BACKEND_URL}/api/exam/${animalId}/${divisionId}/${regionId}?num=5`);
+      const res = await fetch(`${BACKEND_URL}/api/exam-view/${animalId}/${divisionId}/${regionId}/${viewId}?num=5`);
       const data = await res.json();
       if (data.image?.startsWith('/')) data.image = `${BACKEND_URL}${data.image}`;
       setExam(data);
@@ -219,7 +220,7 @@ export default function ExamScreen() {
           
           <View style={styles.imageWrapper}>
             <Image
-              source={getLocalImage(regionId as string) || { uri: exam.image }}
+              source={getLocalImage(regionId as string, viewId as string) || { uri: exam.image }}
               style={styles.skeletonImage}
               contentFit="contain"
             />
