@@ -33,6 +33,7 @@ Mobile application in Spanish for veterinary students to study the skeletal syst
 - ✅ Quiz distractors contextualized to same anatomical region
 - ✅ Study Mode: explore all bones on image without quiz pressure
 - ✅ Dual navigation: "Estudiar" (study) + "Examen" (quiz) per region
+- ✅ Local/offline images: All 5 anatomical images bundled via require() for offline use
 
 ## API Endpoints
 - GET /api/animals - List available animals
