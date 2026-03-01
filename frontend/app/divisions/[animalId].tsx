@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Platform } from '
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { getDivisions } from '../data';
+import { SafeScreen } from '../SafeScreen';
 
 export default function DivisionsScreen() {
   const router = useRouter();
@@ -10,7 +11,7 @@ export default function DivisionsScreen() {
   const divisions = getDivisions(animalId as string);
 
   return (
-    <View style={s.container}>
+    <SafeScreen>
       <View style={s.header}>
         <TouchableOpacity style={s.backBtn} onPress={() => router.back()}>
           <Ionicons name="arrow-back" size={22} color="#fff" />
@@ -34,13 +35,11 @@ export default function DivisionsScreen() {
           );
         })}
       </ScrollView>
-    </View>
+    </SafeScreen>
   );
 }
 
-const TOP = Platform.OS === 'android' ? 30 : 0;
 const s = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#1a1a2e', paddingTop: TOP },
   header: { flexDirection: 'row', alignItems: 'center', padding: 10, borderBottomWidth: 1, borderBottomColor: '#2a2a4a' },
   backBtn: { width: 36, height: 36, borderRadius: 18, backgroundColor: '#16213e', justifyContent: 'center', alignItems: 'center' },
   headerTitle: { flex: 1, textAlign: 'center', fontSize: 18, fontWeight: 'bold', color: '#fff' },
