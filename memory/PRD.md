@@ -41,6 +41,7 @@ Mobile application in Spanish for veterinary students to study the skeletal syst
 
 ## Backlog
 - P1: Expand to other animals
+- P1: Quiz distractors now prioritize same anatomical region (completed Mar 1, 2026)
 - P2: Migrate data to MongoDB for scalability
 - P2: User registration and progress tracking
 - P3: More quiz modes (timed, practice, study)
