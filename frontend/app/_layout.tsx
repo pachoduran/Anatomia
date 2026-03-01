@@ -18,6 +18,9 @@ export default function RootLayout() {
         <Stack.Screen name="subdivisions/[animalId]/[divisionId]" />
         <Stack.Screen name="exam-new/[animalId]/[divisionId]/[regionId]" />
         <Stack.Screen name="study/[animalId]/[divisionId]/[regionId]" />
+        <Stack.Screen name="views/[animalId]/[divisionId]/[regionId]" />
+        <Stack.Screen name="study-view/[animalId]/[divisionId]/[regionId]/[viewId]" />
+        <Stack.Screen name="exam-view/[animalId]/[divisionId]/[regionId]/[viewId]" />
         <Stack.Screen name="regions/[animalId]" />
         <Stack.Screen name="exam/[animalId]/[regionId]" />
       </Stack>
