@@ -34,6 +34,8 @@ const HORSE_IMAGES: { [key: string]: any } = {
   dedo: require('../assets/images/horse_digit.jpg'),
   'dedo_dorsopalmar': require('../assets/images/horse_digit_dorsopalmar.jpg'),
   'dedo_oblicua': require('../assets/images/horse_digit_oblique.jpg'),
+  // Diccionario anatomico
+  direcciones: require('../assets/images/horse_directions.jpg'),
 };
 
 export function getLocalImage(regionId: string, viewId?: string): any {
