@@ -21,7 +21,7 @@ interface Region {
   desc: string;
   bones: number;
   image: string;
-  zoom: string;
+  has_views?: boolean;
 }
 
 export default function RegionsScreen() {
