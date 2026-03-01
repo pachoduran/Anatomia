@@ -130,8 +130,8 @@ async def get_divisions(animal_id: str):
     if animal_id != "horse":
         raise HTTPException(status_code=404, detail="No disponible")
     return [
-        {"id": "axial", "name": "Esqueleto Axial", "desc": "Cráneo, columna, tórax", "bones": 81},
-        {"id": "apendicular", "name": "Esqueleto Apendicular", "desc": "Patas delanteras y traseras", "bones": 120}
+        {"id": "axial", "name": "Esqueleto Axial", "desc": "Cráneo, columna, tórax", "description": "Cráneo, columna, tórax", "bones": 81, "total_bones": 81, "icon": "body"},
+        {"id": "apendicular", "name": "Esqueleto Apendicular", "desc": "Patas delanteras y traseras", "description": "Patas delanteras y traseras", "bones": 120, "total_bones": 120, "icon": "walk"}
     ]
 
 @api_router.get("/regions/{animal_id}/{division_id}")
