@@ -153,12 +153,12 @@ const styles = StyleSheet.create({
   cardTitle: { fontSize: 18, fontWeight: '600', color: '#fff', marginBottom: 4 },
   cardDesc: { fontSize: 13, color: '#888', marginBottom: 12 },
   
-  cardFooter: { flexDirection: 'column', gap: 10 },
-  bonesBadge: { flexDirection: 'row', alignItems: 'center' },
+  cardFooter: { marginTop: 4 },
+  bonesBadge: { flexDirection: 'row', alignItems: 'center', marginBottom: 10 },
   bonesText: { marginLeft: 6, fontWeight: '500', fontSize: 14 },
   
-  btnRow: { flexDirection: 'row', gap: 8 },
-  studyBtn: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 14, paddingVertical: 10, borderRadius: 20, borderWidth: 2 },
+  btnRow: { flexDirection: 'row' },
+  studyBtn: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 14, paddingVertical: 10, borderRadius: 20, borderWidth: 2, marginRight: 8 },
   studyBtnText: { fontWeight: '600', marginLeft: 6, fontSize: 14 },
   examBtn: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16, paddingVertical: 10, borderRadius: 20 },
   examBtnText: { color: '#fff', fontWeight: '600', marginRight: 6, fontSize: 14 },
