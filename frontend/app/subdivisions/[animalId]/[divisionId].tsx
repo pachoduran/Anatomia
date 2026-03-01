@@ -84,11 +84,19 @@ export default function RegionsScreen() {
       <ScrollView contentContainerStyle={styles.content}>
         <Text style={styles.sectionTitle}>Selecciona una región para estudiar</Text>
 
-        {regions.map((region) => (
+        {regions.map((region) => {
+          const studyRoute = region.has_views
+            ? `/views/${animalId}/${divisionId}/${region.id}`
+            : `/study/${animalId}/${divisionId}/${region.id}`;
+          const examRoute = region.has_views
+            ? `/views/${animalId}/${divisionId}/${region.id}`
+            : `/exam-new/${animalId}/${divisionId}/${region.id}`;
+          
+          return (
           <View key={region.id} style={styles.card}>
             <TouchableOpacity
               style={styles.cardImageContainer}
-              onPress={() => router.push(`/study/${animalId}/${divisionId}/${region.id}`)}
+              onPress={() => router.push(studyRoute)}
             >
               <Image source={getLocalImage(region.id) || { uri: region.image }} style={styles.cardImage} contentFit="cover" />
               <View style={[styles.cardOverlay, { backgroundColor: `${divColor}40` }]}>
@@ -99,6 +107,12 @@ export default function RegionsScreen() {
             <View style={styles.cardContent}>
               <Text style={styles.cardTitle}>{region.name}</Text>
               <Text style={styles.cardDesc}>{region.desc}</Text>
+              {region.has_views && (
+                <View style={styles.viewsBadge}>
+                  <Ionicons name="layers-outline" size={14} color="#FFEAA7" />
+                  <Text style={styles.viewsText}>5 vistas disponibles</Text>
+                </View>
+              )}
               
               <View style={styles.cardFooter}>
                 <View style={styles.bonesBadge}>
@@ -109,24 +123,25 @@ export default function RegionsScreen() {
                 <View style={styles.btnRow}>
                   <TouchableOpacity
                     style={[styles.studyBtn, { borderColor: divColor }]}
-                    onPress={() => router.push(`/study/${animalId}/${divisionId}/${region.id}`)}
+                    onPress={() => router.push(studyRoute)}
                   >
                     <Ionicons name="book-outline" size={16} color={divColor} />
-                    <Text style={[styles.studyBtnText, { color: divColor }]}>Estudiar</Text>
+                    <Text style={[styles.studyBtnText, { color: divColor }]}>{region.has_views ? 'Ver Vistas' : 'Estudiar'}</Text>
                   </TouchableOpacity>
                   
                   <TouchableOpacity
                     style={[styles.examBtn, { backgroundColor: divColor }]}
-                    onPress={() => router.push(`/exam-new/${animalId}/${divisionId}/${region.id}`)}
+                    onPress={() => router.push(examRoute)}
                   >
-                    <Text style={styles.examBtnText}>Examen</Text>
+                    <Text style={styles.examBtnText}>{region.has_views ? 'Explorar' : 'Examen'}</Text>
                     <Ionicons name="play" size={16} color="#fff" />
                   </TouchableOpacity>
                 </View>
               </View>
             </View>
           </View>
-        ))}
+          );
+        })}
       </ScrollView>
     </SafeAreaView>
   );
