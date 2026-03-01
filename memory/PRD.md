@@ -34,6 +34,7 @@ Mobile application in Spanish for veterinary students to study the skeletal syst
 - ✅ Study Mode: explore all bones on image without quiz pressure
 - ✅ Dual navigation: "Estudiar" (study) + "Examen" (quiz) per region
 - ✅ Local/offline images: All 5 anatomical images bundled via require() for offline use
+- ✅ Multi-view skull system: 5 anatomical views (Dorsal, Ventral, Lateral, Caudal, Rostral) with AI-generated images and specific bone sets per view
 
 ## API Endpoints
 - GET /api/animals - List available animals
