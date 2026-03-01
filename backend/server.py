@@ -67,7 +67,7 @@ SKELETON = {
                 "name": "Caja Torácica",
                 "desc": "Costillas y esternón - 37 huesos",
                 "bones": 37,
-                "image": f"{BASE_URL}/skeleton_full.jpg",  # Usando imagen completa para tórax
+                "image": f"{BASE_URL}/horse_thorax.jpg",  # IMAGEN GENERADA - TÓRAX
                 "questions": [
                     {"id": "costillas", "name": "Costillas (18 pares)", "qty": 36, "desc": "Protegen órganos vitales, 8 verdaderas + 10 falsas", "x": 42, "y": 42, "color": "Azul"},
                     {"id": "esternon", "name": "Esternón", "qty": 1, "desc": "Hueso del pecho donde se unen las costillas", "x": 35, "y": 62, "color": "Rojo"},
