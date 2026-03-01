@@ -5,6 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { getRegion, Bone } from '../../../data';
 import { getLocalImage } from '../../../localImages';
+import { SafeScreen } from '../../../SafeScreen';
 
 const COLORS: Record<string, string> = { Rojo: '#FF3333', Azul: '#3366FF', Verde: '#33CC33', Amarillo: '#FFCC00', Naranja: '#FF6600', Morado: '#9933FF' };
 
@@ -18,7 +19,7 @@ export default function StudyScreen() {
   if (!region) return <View style={s.center}><Text style={s.err}>No encontrado</Text></View>;
 
   return (
-    <View style={s.container}>
+    <SafeScreen>
       <View style={s.header}>
         <TouchableOpacity style={s.backBtn} onPress={() => router.back()}><Ionicons name="arrow-back" size={22} color="#fff" /></TouchableOpacity>
         <View style={s.hCenter}><Text style={s.hTitle}>{region.name}</Text><Text style={s.hSub}>Modo Estudio</Text></View>
@@ -65,13 +66,11 @@ export default function StudyScreen() {
           <Ionicons name="school-outline" size={18} color="#fff" /><Text style={s.examTxt}>Ir al Examen</Text>
         </TouchableOpacity>
       </ScrollView>
-    </View>
+    </SafeScreen>
   );
 }
 
-const TOP = Platform.OS === 'android' ? 30 : 0;
 const s = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#1a1a2e', paddingTop: TOP },
   center: { flex: 1, backgroundColor: '#1a1a2e', justifyContent: 'center', alignItems: 'center' },
   err: { color: '#FF6B6B' },
   header: { flexDirection: 'row', alignItems: 'center', padding: 10, borderBottomWidth: 1, borderBottomColor: '#2a2a4a' },
