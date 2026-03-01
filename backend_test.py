@@ -36,7 +36,7 @@ class VetBonesAPITester:
             print(f"   Details: {details}")
         return success
 
-    def make_request(self, endpoint: str, expected_status: int = 200) -> tuple[bool, Any]:
+    def make_request(self, endpoint: str, expected_status: int = 200, expect_json: bool = True) -> tuple[bool, Any]:
         """Make API request and return success status and response data"""
         try:
             url = f"{self.base_url}{endpoint}"
@@ -46,11 +46,14 @@ class VetBonesAPITester:
             if response.status_code != expected_status:
                 return False, f"Expected {expected_status}, got {response.status_code}: {response.text[:200]}"
             
-            if expected_status == 200:
+            if expected_status == 200 and expect_json:
                 try:
                     return True, response.json()
                 except json.JSONDecodeError:
                     return False, "Response is not valid JSON"
+            elif expected_status == 200:
+                # For binary content like images
+                return True, f"Binary content, size: {len(response.content)} bytes, content-type: {response.headers.get('content-type', 'unknown')}"
             else:
                 return True, response.text
                 
