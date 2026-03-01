@@ -210,10 +210,100 @@ async def get_regions(animal_id: str, division_id: str):
             "name": r["name"],
             "desc": r["desc"],
             "bones": r["bones"],
-            "image": r["image"]
+            "image": r["image"],
+            "has_views": "views" in r
         }
         for rid, r in div["regions"].items()
     ]
+
+@api_router.get("/views/{animal_id}/{division_id}/{region_id}")
+async def get_views(animal_id: str, division_id: str, region_id: str):
+    if animal_id != "horse" or division_id not in SKELETON:
+        raise HTTPException(status_code=404, detail="No encontrado")
+    div = SKELETON[division_id]
+    if region_id not in div["regions"]:
+        raise HTTPException(status_code=404, detail="Región no encontrada")
+    region = div["regions"][region_id]
+    if "views" not in region:
+        raise HTTPException(status_code=404, detail="Esta región no tiene vistas")
+    return [
+        {"id": vid, "name": v["name"], "desc": v["desc"], "image": v["image"], "bones": len(v["questions"])}
+        for vid, v in region["views"].items()
+    ]
+
+@api_router.get("/exam-view/{animal_id}/{division_id}/{region_id}/{view_id}")
+async def get_exam_view(animal_id: str, division_id: str, region_id: str, view_id: str, num: int = 5):
+    if animal_id != "horse" or division_id not in SKELETON:
+        raise HTTPException(status_code=404, detail="No encontrado")
+    div = SKELETON[division_id]
+    if region_id not in div["regions"]:
+        raise HTTPException(status_code=404, detail="Región no encontrada")
+    region = div["regions"][region_id]
+    if "views" not in region or view_id not in region["views"]:
+        raise HTTPException(status_code=404, detail="Vista no encontrada")
+    view = region["views"][view_id]
+    bones = view["questions"]
+    view_names = [b["name"] for b in bones]
+    # Distractores de otras vistas de la misma región
+    other_names = []
+    for v in region["views"].values():
+        for b in v["questions"]:
+            if b["name"] not in view_names:
+                other_names.append(b["name"])
+    selected = random.sample(bones, min(num, len(bones)))
+    questions = []
+    for bone in selected:
+        correct = bone["name"]
+        same_view = [n for n in view_names if n != correct]
+        random.shuffle(same_view)
+        distractors = same_view[:3]
+        if len(distractors) < 3:
+            extra = random.sample(other_names, min(3 - len(distractors), len(other_names)))
+            distractors.extend(extra)
+        options = [correct] + distractors
+        random.shuffle(options)
+        questions.append({
+            "id": str(uuid.uuid4()),
+            "bone_id": bone["id"],
+            "name": bone["name"],
+            "qty": bone["qty"],
+            "desc": bone["desc"],
+            "x": bone["x"],
+            "y": bone["y"],
+            "color": bone["color"],
+            "options": options,
+            "answer": correct
+        })
+    return {
+        "id": str(uuid.uuid4()),
+        "region": region["name"],
+        "view": view["name"],
+        "image": view["image"],
+        "total": len(questions),
+        "questions": questions
+    }
+
+@api_router.get("/study-view/{animal_id}/{division_id}/{region_id}/{view_id}")
+async def get_study_view(animal_id: str, division_id: str, region_id: str, view_id: str):
+    if animal_id != "horse" or division_id not in SKELETON:
+        raise HTTPException(status_code=404, detail="No encontrado")
+    div = SKELETON[division_id]
+    if region_id not in div["regions"]:
+        raise HTTPException(status_code=404, detail="Región no encontrada")
+    region = div["regions"][region_id]
+    if "views" not in region or view_id not in region["views"]:
+        raise HTTPException(status_code=404, detail="Vista no encontrada")
+    view = region["views"][view_id]
+    return {
+        "region": region["name"],
+        "view": view["name"],
+        "desc": view["desc"],
+        "image": view["image"],
+        "bones": [
+            {"id": b["id"], "name": b["name"], "qty": b["qty"], "desc": b["desc"], "x": b["x"], "y": b["y"], "color": b["color"]}
+            for b in view["questions"]
+        ]
+    }
 
 @api_router.get("/exam/{animal_id}/{division_id}/{region_id}")
 async def get_exam(animal_id: str, division_id: str, region_id: str, num: int = 5):
