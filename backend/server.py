@@ -38,7 +38,71 @@ SKELETON = {
                 "name": "Cráneo y Cara",
                 "desc": "34 huesos del cráneo y cara",
                 "bones": 34,
-                "image": f"{BASE_URL}/horse_skull.jpg",  # IMAGEN GENERADA - CRÁNEO
+                "image": f"{BASE_URL}/horse_skull.jpg",
+                "views": {
+                    "dorsal": {
+                        "name": "Vista Dorsal (Desde arriba)",
+                        "desc": "Evalúa la simetría del cráneo desde arriba",
+                        "image": f"{BASE_URL}/horse_skull_dorsal.jpg",
+                        "questions": [
+                            {"id": "nasal_d", "name": "Huesos Nasales", "qty": 2, "desc": "Unión de los huesos nasales en la línea media", "x": 30, "y": 25, "color": "Rojo"},
+                            {"id": "frontal_d", "name": "Huesos Frontales", "qty": 2, "desc": "Grandes huesos planos que forman la frente", "x": 50, "y": 40, "color": "Azul"},
+                            {"id": "parietal_d", "name": "Huesos Parietales", "qty": 2, "desc": "Parte superior-posterior del cráneo", "x": 55, "y": 60, "color": "Verde"},
+                            {"id": "orbita_d", "name": "Borde Orbital", "qty": 2, "desc": "Borde óseo de las órbitas oculares visto desde arriba", "x": 35, "y": 45, "color": "Amarillo"},
+                            {"id": "cresta_d", "name": "Cresta Sagital", "qty": 1, "desc": "Cresta ósea en la línea media posterior del cráneo", "x": 50, "y": 75, "color": "Naranja"},
+                        ]
+                    },
+                    "ventral": {
+                        "name": "Vista Ventral (Desde abajo)",
+                        "desc": "La más compleja, muestra la base del cráneo",
+                        "image": f"{BASE_URL}/horse_skull_ventral.jpg",
+                        "questions": [
+                            {"id": "palatino_v", "name": "Huesos Palatinos", "qty": 2, "desc": "Forman el paladar duro posterior", "x": 40, "y": 35, "color": "Rojo"},
+                            {"id": "vomer_v", "name": "Vómer", "qty": 1, "desc": "Hueso impar que divide las coanas", "x": 50, "y": 25, "color": "Azul"},
+                            {"id": "esfenoides_v", "name": "Esfenoides", "qty": 1, "desc": "Hueso complejo en la base del cráneo", "x": 50, "y": 55, "color": "Verde"},
+                            {"id": "condilo_v", "name": "Cóndilos del Occipital", "qty": 2, "desc": "Articulación con la primera vértebra cervical (Atlas)", "x": 50, "y": 80, "color": "Amarillo"},
+                            {"id": "maxilar_v", "name": "Maxilar (filas dentales)", "qty": 2, "desc": "Filas de molares y premolares superiores", "x": 30, "y": 45, "color": "Naranja"},
+                            {"id": "coanas_v", "name": "Coanas", "qty": 2, "desc": "Aberturas posteriores de las fosas nasales", "x": 50, "y": 20, "color": "Morado"},
+                        ]
+                    },
+                    "lateral": {
+                        "name": "Vista Lateral (De perfil)",
+                        "desc": "La más común, muestra la extensión completa de la cara",
+                        "image": f"{BASE_URL}/horse_skull_lateral.jpg",
+                        "questions": [
+                            {"id": "maxilar_l", "name": "Maxilar", "qty": 2, "desc": "Hueso grande que contiene los dientes superiores", "x": 25, "y": 50, "color": "Morado"},
+                            {"id": "premaxilar_l", "name": "Premaxilar (Incisivo)", "qty": 2, "desc": "Porción anterior que contiene los incisivos superiores", "x": 10, "y": 55, "color": "Rojo"},
+                            {"id": "lagrimal_l", "name": "Hueso Lagrimal", "qty": 2, "desc": "Pequeño hueso en el borde anterior de la órbita", "x": 40, "y": 30, "color": "Azul"},
+                            {"id": "cigomatico_l", "name": "Hueso Cigomático", "qty": 2, "desc": "Forma el pómulo y parte del arco cigomático", "x": 50, "y": 45, "color": "Verde"},
+                            {"id": "mandibula_l", "name": "Mandíbula", "qty": 2, "desc": "Hueso móvil inferior que contiene dientes", "x": 35, "y": 70, "color": "Amarillo"},
+                            {"id": "arco_l", "name": "Arco Cigomático", "qty": 2, "desc": "Puente óseo lateral del cráneo", "x": 60, "y": 40, "color": "Naranja"},
+                            {"id": "diastema_l", "name": "Diastema (Barras)", "qty": 2, "desc": "Espacio entre incisivos y premolares donde se coloca el bocado", "x": 20, "y": 60, "color": "Rojo"},
+                        ]
+                    },
+                    "caudal": {
+                        "name": "Vista Caudal (Desde atrás)",
+                        "desc": "Conexión con la columna vertebral",
+                        "image": f"{BASE_URL}/horse_skull_caudal.jpg",
+                        "questions": [
+                            {"id": "occipital_c", "name": "Hueso Occipital", "qty": 1, "desc": "Gran hueso posterior del cráneo", "x": 50, "y": 40, "color": "Rojo"},
+                            {"id": "interparietal_c", "name": "Hueso Interparietal", "qty": 1, "desc": "Pequeño hueso entre parietales y occipital", "x": 50, "y": 20, "color": "Azul"},
+                            {"id": "foramen_c", "name": "Foramen Magnum", "qty": 1, "desc": "Gran abertura por donde pasa la médula espinal", "x": 50, "y": 60, "color": "Verde"},
+                            {"id": "cresta_nucal_c", "name": "Cresta Nucal", "qty": 1, "desc": "Cresta donde se insertan ligamentos del cuello", "x": 50, "y": 10, "color": "Amarillo"},
+                            {"id": "condilos_c", "name": "Cóndilos Occipitales", "qty": 2, "desc": "Superficies articulares para el Atlas (C1)", "x": 35, "y": 70, "color": "Naranja"},
+                        ]
+                    },
+                    "rostral": {
+                        "name": "Vista Rostral (De frente)",
+                        "desc": "Punta de la nariz y boca",
+                        "image": f"{BASE_URL}/horse_skull_rostral.jpg",
+                        "questions": [
+                            {"id": "incisivo_r", "name": "Hueso Incisivo", "qty": 2, "desc": "Contiene los dientes incisivos superiores", "x": 50, "y": 70, "color": "Rojo"},
+                            {"id": "apertura_r", "name": "Apertura Nasal Ósea", "qty": 1, "desc": "Abertura nasal formada por huesos nasales e incisivos", "x": 50, "y": 30, "color": "Azul"},
+                            {"id": "infraorbitario_r", "name": "Canal Infraorbitario", "qty": 2, "desc": "Foramen por donde pasa el nervio infraorbitario", "x": 30, "y": 50, "color": "Verde"},
+                            {"id": "incisivos_dientes_r", "name": "Dientes Incisivos", "qty": 6, "desc": "Disposición de los 6 incisivos superiores", "x": 50, "y": 85, "color": "Amarillo"},
+                        ]
+                    }
+                },
                 "questions": [
                     {"id": "frontal", "name": "Hueso Frontal", "qty": 2, "desc": "Parte superior del cráneo, forma la frente", "x": 40, "y": 15, "color": "Rojo"},
                     {"id": "parietal", "name": "Hueso Parietal", "qty": 2, "desc": "Detrás del frontal, parte superior-posterior del cráneo", "x": 60, "y": 20, "color": "Azul"},
