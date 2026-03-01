@@ -1,183 +1,93 @@
-import React, { useEffect, useState } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  ScrollView,
-  ActivityIndicator,
-  SafeAreaView,
-} from 'react-native';
+import React from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Platform } from 'react-native';
 import { Image } from 'expo-image';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter, useLocalSearchParams } from 'expo-router';
+import { getRegions } from '../../data';
 import { getLocalImage } from '../../localImages';
 
-const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
-
-interface Region {
-  id: string;
-  name: string;
-  desc: string;
-  bones: number;
-  image: string;
-  has_views?: boolean;
-}
-
-export default function RegionsScreen() {
+export default function SubdivisionsScreen() {
   const router = useRouter();
   const { animalId, divisionId } = useLocalSearchParams<{ animalId: string; divisionId: string }>();
-  const [regions, setRegions] = useState<Region[]>([]);
-  const [loading, setLoading] = useState(true);
+  const regions = getRegions(animalId as string, divisionId as string);
+  const color = divisionId === 'axial' ? '#4ECDC4' : '#FF6B6B';
 
-  const divisionName = divisionId === 'axial' ? 'Esqueleto Axial' : 'Esqueleto Apendicular';
-  const divColor = divisionId === 'axial' ? '#4ECDC4' : '#FF6B6B';
-
-  useEffect(() => {
-    loadRegions();
-  }, []);
-
-  const loadRegions = async () => {
-    try {
-      const res = await fetch(`${BACKEND_URL}/api/regions/${animalId}/${divisionId}`);
-      const data = await res.json();
-      setRegions(data.map((r: any) => ({ ...r, image: r.image?.startsWith('/') ? `${BACKEND_URL}${r.image}` : r.image })));
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setLoading(false);
-    }
+  const navigate = (regionId: string, hasViews: boolean) => {
+    if (hasViews) router.push(`/views/${animalId}/${divisionId}/${regionId}`);
+    else router.push(`/study/${animalId}/${divisionId}/${regionId}`);
   };
-
-  const getIcon = (id: string): keyof typeof Ionicons.glyphMap => {
-    if (id.includes('craneo')) return 'skull-outline';
-    if (id.includes('columna')) return 'git-branch-outline';
-    if (id.includes('torax')) return 'layers-outline';
-    if (id.includes('anterior')) return 'hand-left-outline';
-    if (id.includes('posterior')) return 'footsteps-outline';
-    return 'body-outline';
-  };
-
-  if (loading) {
-    return (
-      <SafeAreaView style={styles.center}>
-        <ActivityIndicator size="large" color={divColor} />
-      </SafeAreaView>
-    );
-  }
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
-          <Ionicons name="arrow-back" size={24} color="#fff" />
+    <View style={s.container}>
+      <View style={s.header}>
+        <TouchableOpacity style={s.backBtn} onPress={() => router.back()}>
+          <Ionicons name="arrow-back" size={22} color="#fff" />
         </TouchableOpacity>
-        <View style={styles.headerCenter}>
-          <Text style={styles.headerTitle}>{divisionName}</Text>
-          <Text style={[styles.headerSub, { color: divColor }]}>
-            {divisionId === 'axial' ? '81 huesos' : '120 huesos'}
-          </Text>
-        </View>
-        <View style={{ width: 40 }} />
+        <Text style={s.headerTitle}>{divisionId === 'axial' ? 'Esqueleto Axial' : 'Esqueleto Apendicular'}</Text>
+        <View style={{ width: 36 }} />
       </View>
-
-      <ScrollView contentContainerStyle={styles.content}>
-        <Text style={styles.sectionTitle}>Selecciona una región para estudiar</Text>
-
-        {regions.map((region) => {
-          const studyRoute = region.has_views
-            ? `/views/${animalId}/${divisionId}/${region.id}`
-            : `/study/${animalId}/${divisionId}/${region.id}`;
-          const examRoute = region.has_views
-            ? `/views/${animalId}/${divisionId}/${region.id}`
-            : `/exam-new/${animalId}/${divisionId}/${region.id}`;
-          
-          return (
-          <View key={region.id} style={styles.card}>
-            <TouchableOpacity
-              style={styles.cardImageContainer}
-              onPress={() => router.push(studyRoute)}
-            >
-              <Image source={getLocalImage(region.id) || { uri: region.image }} style={styles.cardImage} contentFit="cover" />
-              <View style={[styles.cardOverlay, { backgroundColor: `${divColor}40` }]}>
-                <Ionicons name={getIcon(region.id)} size={36} color="#fff" />
+      <ScrollView contentContainerStyle={s.content}>
+        {regions.map((r) => (
+          <View key={r.id} style={s.card}>
+            <TouchableOpacity onPress={() => navigate(r.id, !!r.views)}>
+              <Image source={getLocalImage(r.imageKey)} style={s.cardImg} contentFit="cover" />
+              <View style={[s.cardOverlay, { backgroundColor: `${color}30` }]}>
+                <Ionicons name="search" size={28} color="#fff" />
               </View>
             </TouchableOpacity>
-            
-            <View style={styles.cardContent}>
-              <Text style={styles.cardTitle}>{region.name}</Text>
-              <Text style={styles.cardDesc}>{region.desc}</Text>
-              {region.has_views && (
-                <View style={styles.viewsBadge}>
-                  <Ionicons name="layers-outline" size={14} color="#FFEAA7" />
-                  <Text style={styles.viewsText}>5 vistas disponibles</Text>
+            <View style={s.cardBody}>
+              <Text style={s.cardTitle}>{r.name}</Text>
+              <Text style={s.cardDesc}>{r.desc}</Text>
+              {r.views && (
+                <View style={s.viewsBadge}>
+                  <Ionicons name="layers-outline" size={13} color="#FFEAA7" />
+                  <Text style={s.viewsText}>{r.views.length} vistas</Text>
                 </View>
               )}
-              
-              <View style={styles.cardFooter}>
-                <View style={styles.bonesBadge}>
-                  <Ionicons name="fitness" size={16} color={divColor} />
-                  <Text style={[styles.bonesText, { color: divColor }]}>{region.bones} huesos</Text>
-                </View>
-                
-                <View style={styles.btnRow}>
-                  <TouchableOpacity
-                    style={[styles.studyBtn, { borderColor: divColor }]}
-                    onPress={() => router.push(studyRoute)}
-                  >
-                    <Ionicons name="book-outline" size={16} color={divColor} />
-                    <Text style={[styles.studyBtnText, { color: divColor }]}>{region.has_views ? 'Ver Vistas' : 'Estudiar'}</Text>
+              <View style={s.row}>
+                <Text style={[s.boneCount, { color }]}>{r.bones} huesos</Text>
+                <View style={s.btnRow}>
+                  <TouchableOpacity style={[s.studyBtn, { borderColor: color }]} onPress={() => navigate(r.id, !!r.views)}>
+                    <Ionicons name="book-outline" size={14} color={color} />
+                    <Text style={[s.studyTxt, { color }]}>{r.views ? 'Vistas' : 'Estudiar'}</Text>
                   </TouchableOpacity>
-                  
-                  <TouchableOpacity
-                    style={[styles.examBtn, { backgroundColor: divColor }]}
-                    onPress={() => router.push(examRoute)}
-                  >
-                    <Text style={styles.examBtnText}>{region.has_views ? 'Explorar' : 'Examen'}</Text>
-                    <Ionicons name="play" size={16} color="#fff" />
+                  <TouchableOpacity style={[s.examBtn, { backgroundColor: color }]} onPress={() => {
+                    if (r.views) router.push(`/views/${animalId}/${divisionId}/${r.id}`);
+                    else router.push(`/exam-new/${animalId}/${divisionId}/${r.id}`);
+                  }}>
+                    <Text style={s.examTxt}>{r.views ? 'Explorar' : 'Examen'}</Text>
+                    <Ionicons name="play" size={14} color="#fff" />
                   </TouchableOpacity>
                 </View>
               </View>
             </View>
           </View>
-          );
-        })}
+        ))}
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }
 
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#1a1a2e' },
-  center: { flex: 1, backgroundColor: '#1a1a2e', justifyContent: 'center', alignItems: 'center' },
-  
-  header: { flexDirection: 'row', alignItems: 'center', padding: 16, borderBottomWidth: 1, borderBottomColor: '#2a2a4a' },
-  backBtn: { width: 40, height: 40, borderRadius: 20, backgroundColor: '#16213e', justifyContent: 'center', alignItems: 'center' },
-  headerCenter: { flex: 1, alignItems: 'center' },
-  headerTitle: { fontSize: 18, fontWeight: 'bold', color: '#fff' },
-  headerSub: { fontSize: 13 },
-  
-  content: { padding: 16 },
-  sectionTitle: { fontSize: 15, color: '#888', marginBottom: 16 },
-  
-  card: { backgroundColor: '#16213e', borderRadius: 16, marginBottom: 16, overflow: 'hidden' },
-  cardImageContainer: { height: 140, position: 'relative' },
-  cardImage: { width: '100%', height: '100%' },
-  cardOverlay: { ...StyleSheet.absoluteFillObject, justifyContent: 'center', alignItems: 'center' },
-  
-  cardContent: { padding: 16 },
-  cardTitle: { fontSize: 18, fontWeight: '600', color: '#fff', marginBottom: 4 },
-  cardDesc: { fontSize: 13, color: '#888', marginBottom: 12 },
-  viewsBadge: { flexDirection: 'row', alignItems: 'center', marginBottom: 8, backgroundColor: 'rgba(255,234,167,0.1)', paddingHorizontal: 8, paddingVertical: 4, borderRadius: 8, alignSelf: 'flex-start' },
-  viewsText: { color: '#FFEAA7', fontSize: 12, fontWeight: '500', marginLeft: 4 },
-  
-  cardFooter: { marginTop: 4 },
-  bonesBadge: { flexDirection: 'row', alignItems: 'center', marginBottom: 10 },
-  bonesText: { marginLeft: 6, fontWeight: '500', fontSize: 14 },
-  
+const TOP = Platform.OS === 'android' ? 30 : 0;
+const s = StyleSheet.create({
+  container: { flex: 1, backgroundColor: '#1a1a2e', paddingTop: TOP },
+  header: { flexDirection: 'row', alignItems: 'center', padding: 10, borderBottomWidth: 1, borderBottomColor: '#2a2a4a' },
+  backBtn: { width: 36, height: 36, borderRadius: 18, backgroundColor: '#16213e', justifyContent: 'center', alignItems: 'center' },
+  headerTitle: { flex: 1, textAlign: 'center', fontSize: 16, fontWeight: 'bold', color: '#fff' },
+  content: { padding: 10, paddingBottom: 40 },
+  card: { backgroundColor: '#16213e', borderRadius: 12, marginBottom: 10, overflow: 'hidden' },
+  cardImg: { width: '100%', height: 130 },
+  cardOverlay: { position: 'absolute', top: 0, left: 0, right: 0, height: 130, justifyContent: 'center', alignItems: 'center' },
+  cardBody: { padding: 12 },
+  cardTitle: { fontSize: 16, fontWeight: '600', color: '#fff' },
+  cardDesc: { fontSize: 12, color: '#888', marginTop: 2 },
+  viewsBadge: { flexDirection: 'row', alignItems: 'center', marginTop: 6, backgroundColor: 'rgba(255,234,167,0.1)', paddingHorizontal: 8, paddingVertical: 3, borderRadius: 8, alignSelf: 'flex-start' },
+  viewsText: { color: '#FFEAA7', fontSize: 11, fontWeight: '500', marginLeft: 4 },
+  row: { marginTop: 8 },
+  boneCount: { fontSize: 13, fontWeight: '500', marginBottom: 8 },
   btnRow: { flexDirection: 'row' },
-  studyBtn: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 14, paddingVertical: 10, borderRadius: 20, borderWidth: 2, marginRight: 8 },
-  studyBtnText: { fontWeight: '600', marginLeft: 6, fontSize: 14 },
-  examBtn: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16, paddingVertical: 10, borderRadius: 20 },
-  examBtnText: { color: '#fff', fontWeight: '600', marginRight: 6, fontSize: 14 },
+  studyBtn: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 12, paddingVertical: 8, borderRadius: 18, borderWidth: 2, marginRight: 8 },
+  studyTxt: { fontWeight: '600', marginLeft: 4, fontSize: 13 },
+  examBtn: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 14, paddingVertical: 8, borderRadius: 18 },
+  examTxt: { color: '#fff', fontWeight: '600', marginRight: 4, fontSize: 13 },
 });
