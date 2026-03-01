@@ -11,6 +11,7 @@ import {
 import { Image } from 'expo-image';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter, useLocalSearchParams } from 'expo-router';
+import { getLocalImage } from '../../localImages';
 
 const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
 
@@ -89,7 +90,7 @@ export default function RegionsScreen() {
               style={styles.cardImageContainer}
               onPress={() => router.push(`/study/${animalId}/${divisionId}/${region.id}`)}
             >
-              <Image source={{ uri: region.image }} style={styles.cardImage} contentFit="cover" />
+              <Image source={getLocalImage(region.id) || { uri: region.image }} style={styles.cardImage} contentFit="cover" />
               <View style={[styles.cardOverlay, { backgroundColor: `${divColor}40` }]}>
                 <Ionicons name={getIcon(region.id)} size={36} color="#fff" />
               </View>
