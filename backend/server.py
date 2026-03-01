@@ -163,20 +163,24 @@ async def get_exam(animal_id: str, division_id: str, region_id: str, num: int = 
     region = div["regions"][region_id]
     bones = region["questions"]
     
-    # Todos los nombres para distractores
-    all_names = []
-    for d in SKELETON.values():
-        for r in d["regions"].values():
-            for b in r["questions"]:
-                all_names.append(b["name"])
+    # Distractores: priorizar misma región, luego misma división
+    region_names = [b["name"] for b in bones]
+    division_names = []
+    for r in div["regions"].values():
+        for b in r["questions"]:
+            if b["name"] not in region_names:
+                division_names.append(b["name"])
     
     selected = random.sample(bones, min(num, len(bones)))
     
     questions = []
     for bone in selected:
         correct = bone["name"]
-        distractors = [n for n in all_names if n != correct]
-        options = [correct] + random.sample(distractors, 3)
+        # Primero intentar distractores de la misma región
+        same_region = [n for n in region_names if n != correct]
+        # Si no hay suficientes, agregar de la misma división
+        pool = same_region + division_names
+        options = [correct] + random.sample(pool, min(3, len(pool)))
         random.shuffle(options)
         
         questions.append({
