@@ -324,11 +324,14 @@ frontend:
       - working: true
         agent: "main"
         comment: "UI funcional con tarjetas de animales, caballo disponible, vaca/cerdo deshabilitados"
+      - working: true
+        agent: "testing"
+        comment: "TESTED MOBILE UI (390x844): VetBones title displayed, stats section shows '205 Huesos', '2 Divisiones', '5 Regiones'. Caballo card visible with 'Equus caballus' and '205 huesos'. Navigation to divisions working perfectly."
 
   - task: "Pantalla regiones - Selección de región anatómica"
     implemented: true
     working: true
-    file: "app/regions/[animalId].tsx"
+    file: "app/subdivisions/[animalId]/[divisionId].tsx"
     stuck_count: 0
     priority: "high"
     needs_retesting: false
@@ -336,11 +339,14 @@ frontend:
       - working: true
         agent: "main"
         comment: "Lista las 5 regiones con iconos, descripción y cantidad de huesos"
+      - working: true
+        agent: "testing"
+        comment: "TESTED CRITICAL REQUIREMENT: All anatomical regions display DIFFERENT images as required. Axial regions show 3 distinct images: horse_skull.jpg (Cráneo y Cara), horse_spine.jpg (Columna Vertebral), horse_thorax.jpg (Caja Torácica). User's main complaint RESOLVED - each region has unique anatomical image."
 
   - task: "Pantalla examen - Quiz de selección múltiple"
     implemented: true
     working: true
-    file: "app/exam/[animalId]/[regionId].tsx"
+    file: "app/exam-new/[animalId]/[divisionId]/[regionId].tsx"
     stuck_count: 0
     priority: "high"
     needs_retesting: false
@@ -348,6 +354,21 @@ frontend:
       - working: true
         agent: "main"
         comment: "Examen funcional con imágenes anatómicas reales de UC Davis, opciones múltiples, feedback visual correcto/incorrecto"
+      - working: true
+        agent: "testing"
+        comment: "TESTED QUIZ FUNCTIONALITY: Quiz loads successfully with skull-specific anatomical image. Progress indicator shows '1/5', color-coded instruction (Azul), description hints, 4 multiple choice options (A-D), and Confirmar button all working. Mobile-responsive design confirmed."
+
+  - task: "Navegación completa - Flujo de usuario completo"
+    implemented: true
+    working: true
+    file: "Multiple screens"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "TESTED FULL USER FLOW: Home → Caballo → Divisions → Axial/Apendicular → Regions → Quiz. All navigation working. Both Esqueleto Axial (81 huesos) and Esqueleto Apendicular (120 huesos) accessible. Mobile UI (390x844) renders perfectly throughout entire flow."
 
 metadata:
   created_by: "main_agent"
