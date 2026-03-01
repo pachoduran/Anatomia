@@ -51,10 +51,10 @@ const COLORS: { [key: string]: string } = {
 
 export default function ExamScreen() {
   const router = useRouter();
-  const { animalId, divisionId, regionId } = useLocalSearchParams<{
+  const { animalId, divisionId, subdivisionId } = useLocalSearchParams<{
     animalId: string;
     divisionId: string;
-    regionId: string;
+    subdivisionId: string;
   }>();
 
   const [exam, setExam] = useState<Exam | null>(null);
