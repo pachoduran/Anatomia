@@ -176,11 +176,15 @@ async def get_exam(animal_id: str, division_id: str, region_id: str, num: int = 
     questions = []
     for bone in selected:
         correct = bone["name"]
-        # Primero intentar distractores de la misma región
+        # Primero llenar con huesos de la misma región
         same_region = [n for n in region_names if n != correct]
-        # Si no hay suficientes, agregar de la misma división
-        pool = same_region + division_names
-        options = [correct] + random.sample(pool, min(3, len(pool)))
+        random.shuffle(same_region)
+        distractors = same_region[:3]
+        # Si faltan, completar con huesos de la misma división
+        if len(distractors) < 3:
+            extra = random.sample(division_names, min(3 - len(distractors), len(division_names)))
+            distractors.extend(extra)
+        options = [correct] + distractors
         random.shuffle(options)
         
         questions.append({
