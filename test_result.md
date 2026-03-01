@@ -147,6 +147,114 @@ backend:
         agent: "testing"
         comment: "TESTED: Returns 2 divisions (axial with 81 bones, apendicular with 120 bones) with all required fields including icons. Status 200 OK."
 
+  - task: "GET /api/regions/horse/axial - Axial skeletal regions"
+    implemented: true
+    working: true
+    file: "server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "TESTED: Returns 3 axial regions (craneo, columna, torax) with different image URLs for each region. All required fields present."
+
+  - task: "GET /api/regions/horse/apendicular - Apendicular skeletal regions"
+    implemented: true
+    working: true
+    file: "server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "TESTED: Returns 2 apendicular regions (anterior, posterior) with different image URLs. All required fields present."
+
+  - task: "GET /api/exam/horse/axial/craneo - Skull exam generation"
+    implemented: true
+    working: true
+    file: "server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "TESTED: Generates exam with skull image (horse_skull.jpg), 3 questions with id, name, desc, x, y, color, options, answer fields. Status 200 OK."
+
+  - task: "GET /api/exam/horse/axial/columna - Spine exam generation"
+    implemented: true
+    working: true
+    file: "server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "TESTED: Generates exam with spine image (horse_spine.jpg) DIFFERENT from skull image. 3 questions with correct structure. Status 200 OK."
+
+  - task: "GET /api/exam/horse/axial/torax - Thorax exam generation"
+    implemented: true
+    working: true
+    file: "server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "TESTED: Generates exam with thorax image (horse_thorax.jpg) DIFFERENT from skull/spine. 2 questions with correct structure. Status 200 OK."
+
+  - task: "GET /api/exam/horse/apendicular/anterior - Forelimb exam generation"
+    implemented: true
+    working: true
+    file: "server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "TESTED: Generates exam with forelimb image (horse_forelimb.jpg). 3 questions with correct structure. Status 200 OK."
+
+  - task: "GET /api/exam/horse/apendicular/posterior - Hindlimb exam generation"
+    implemented: true
+    working: true
+    file: "server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "TESTED: Generates exam with hindlimb image (horse_hindlimb.jpg). 3 questions with correct structure. Status 200 OK."
+
+  - task: "GET /api/assets/{filename} - Image asset serving"
+    implemented: true
+    working: true
+    file: "server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "TESTED: All 5 anatomical images load correctly (horse_skull.jpg, horse_spine.jpg, horse_thorax.jpg, horse_forelimb.jpg, horse_hindlimb.jpg). Binary content served with proper content-types."
+
+  - task: "404 Error handling - Invalid endpoints"
+    implemented: true
+    working: true
+    file: "server.py"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "TESTED: 404 responses working correctly for /api/divisions/cat and /api/exam/horse/axial/nonexistent endpoints."
+
   - task: "GET /api/regions/{animal_id} - Obtener regiones anatómicas"
     implemented: true
     working: true
