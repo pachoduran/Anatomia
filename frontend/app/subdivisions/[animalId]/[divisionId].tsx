@@ -168,6 +168,8 @@ const styles = StyleSheet.create({
   cardContent: { padding: 16 },
   cardTitle: { fontSize: 18, fontWeight: '600', color: '#fff', marginBottom: 4 },
   cardDesc: { fontSize: 13, color: '#888', marginBottom: 12 },
+  viewsBadge: { flexDirection: 'row', alignItems: 'center', marginBottom: 8, backgroundColor: 'rgba(255,234,167,0.1)', paddingHorizontal: 8, paddingVertical: 4, borderRadius: 8, alignSelf: 'flex-start' },
+  viewsText: { color: '#FFEAA7', fontSize: 12, fontWeight: '500', marginLeft: 4 },
   
   cardFooter: { marginTop: 4 },
   bonesBadge: { flexDirection: 'row', alignItems: 'center', marginBottom: 10 },
