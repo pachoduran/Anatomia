@@ -84,17 +84,16 @@ export default function RegionsScreen() {
         <Text style={styles.sectionTitle}>Selecciona una región para estudiar</Text>
 
         {regions.map((region) => (
-          <TouchableOpacity
-            key={region.id}
-            style={styles.card}
-            onPress={() => router.push(`/exam-new/${animalId}/${divisionId}/${region.id}`)}
-          >
-            <View style={styles.cardImageContainer}>
+          <View key={region.id} style={styles.card}>
+            <TouchableOpacity
+              style={styles.cardImageContainer}
+              onPress={() => router.push(`/study/${animalId}/${divisionId}/${region.id}`)}
+            >
               <Image source={{ uri: region.image }} style={styles.cardImage} contentFit="cover" />
               <View style={[styles.cardOverlay, { backgroundColor: `${divColor}40` }]}>
                 <Ionicons name={getIcon(region.id)} size={36} color="#fff" />
               </View>
-            </View>
+            </TouchableOpacity>
             
             <View style={styles.cardContent}>
               <Text style={styles.cardTitle}>{region.name}</Text>
@@ -106,13 +105,26 @@ export default function RegionsScreen() {
                   <Text style={[styles.bonesText, { color: divColor }]}>{region.bones} huesos</Text>
                 </View>
                 
-                <View style={[styles.examBtn, { backgroundColor: divColor }]}>
-                  <Text style={styles.examBtnText}>Examen</Text>
-                  <Ionicons name="play" size={16} color="#fff" />
+                <View style={styles.btnRow}>
+                  <TouchableOpacity
+                    style={[styles.studyBtn, { borderColor: divColor }]}
+                    onPress={() => router.push(`/study/${animalId}/${divisionId}/${region.id}`)}
+                  >
+                    <Ionicons name="book-outline" size={16} color={divColor} />
+                    <Text style={[styles.studyBtnText, { color: divColor }]}>Estudiar</Text>
+                  </TouchableOpacity>
+                  
+                  <TouchableOpacity
+                    style={[styles.examBtn, { backgroundColor: divColor }]}
+                    onPress={() => router.push(`/exam-new/${animalId}/${divisionId}/${region.id}`)}
+                  >
+                    <Text style={styles.examBtnText}>Examen</Text>
+                    <Ionicons name="play" size={16} color="#fff" />
+                  </TouchableOpacity>
                 </View>
               </View>
             </View>
-          </TouchableOpacity>
+          </View>
         ))}
       </ScrollView>
     </SafeAreaView>
