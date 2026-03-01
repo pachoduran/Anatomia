@@ -1,18 +1,11 @@
 import React from 'react';
 import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-export default function RootLayout() {
+export default function Layout() {
   return (
-    <>
-      <StatusBar style="light" />
-      <Stack
-        screenOptions={{
-          headerShown: false,
-          contentStyle: { backgroundColor: '#1a1a2e' },
-          animation: 'slide_from_right',
-        }}
-      >
+    <SafeAreaProvider>
+      <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="index" />
         <Stack.Screen name="divisions/[animalId]" />
         <Stack.Screen name="subdivisions/[animalId]/[divisionId]" />
@@ -21,9 +14,7 @@ export default function RootLayout() {
         <Stack.Screen name="views/[animalId]/[divisionId]/[regionId]" />
         <Stack.Screen name="study-view/[animalId]/[divisionId]/[regionId]/[viewId]" />
         <Stack.Screen name="exam-view/[animalId]/[divisionId]/[regionId]/[viewId]" />
-        <Stack.Screen name="regions/[animalId]" />
-        <Stack.Screen name="exam/[animalId]/[regionId]" />
       </Stack>
-    </>
+    </SafeAreaProvider>
   );
 }
