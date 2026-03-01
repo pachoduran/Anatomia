@@ -1,51 +1,32 @@
-# VetBones - PRD (Product Requirements Document)
+# VetBones - PRD
 
 ## Problem Statement
-Mobile application in Spanish for veterinary students to study the skeletal system of animals, starting with the horse. Structured hierarchically based on anatomical divisions, displaying region-specific images with visual bone markers for identification quizzes.
-
-## User Persona
-- Veterinary students studying animal anatomy
-- Language: Spanish
-- Platform: Mobile-first web (Expo)
-
-## Core Requirements
-1. **Hierarchical navigation**: Animal → Division (Axial/Apendicular) → Region → Quiz
-2. **Region-specific images**: Each anatomical region must display a DIFFERENT, realistic anatomical image
-3. **Quiz system**: Multiple-choice identification of highlighted bones with colored markers
-4. **205 bones organized** across 5 regions for the horse
+App móvil en español para estudiantes de veterinaria para estudiar el sistema óseo de animales, comenzando con el caballo. Estructurada jerárquicamente con imágenes específicas por región anatómica.
 
 ## Architecture
-- **Frontend**: Expo (React Native) web app with file-based routing
-- **Backend**: FastAPI serving data + static image assets
-- **Data**: Hardcoded Python dictionary (no database yet)
-- **Images**: AI-generated with Gemini Nano Banana, served as static assets
+- **Frontend-only**: Expo (React Native) - 100% offline, sin backend
+- **Data**: Embebida en `data.ts` con tipos TypeScript
+- **Images**: Bundled con `require()` en `localImages.ts` para uso offline
 
-## What's Implemented (Mar 1, 2026)
-- ✅ Full-stack scaffolding (Expo + FastAPI)
-- ✅ Hierarchical data structure for 205 horse bones
-- ✅ Multi-level navigation (Home → Division → Region → Quiz)
-- ✅ Dynamic quiz engine with scoring and results
-- ✅ Visual bone markers (colored dots with position coordinates)
-- ✅ 5 unique AI-generated anatomical images (skull, spine, thorax, forelimb, hindlimb)
-- ✅ Static image serving from /api/assets/
-- ✅ API field alignment between frontend and backend
-- ✅ Thorax image generated (was missing)
-- ✅ Quiz distractors contextualized to same anatomical region
-- ✅ Study Mode: explore all bones on image without quiz pressure
-- ✅ Dual navigation: "Estudiar" (study) + "Examen" (quiz) per region
-- ✅ Local/offline images: All 5 anatomical images bundled via require() for offline use
-- ✅ Multi-view skull system: 5 anatomical views (Dorsal, Ventral, Lateral, Caudal, Rostral) with AI-generated images and specific bone sets per view
+## Implemented (Mar 1, 2026)
+- ✅ Navegación jerárquica (Home → División → Región → Quiz/Estudio)
+- ✅ 205 huesos del caballo organizados en 5 regiones
+- ✅ 10 imágenes AI anatómicas (5 regiones + 5 vistas del cráneo)
+- ✅ 5 vistas del cráneo (Dorsal, Ventral, Lateral, Caudal, Rostral)
+- ✅ Modo Estudio con marcadores y etiquetas
+- ✅ Quiz contextualizado (opciones solo de la misma región)
+- ✅ 100% offline - datos e imágenes embebidos en la app
+- ✅ Layout reducido para Android (padding superior/inferior)
+- ✅ Componente ExamShared reutilizable
 
-## API Endpoints
-- GET /api/animals - List available animals
-- GET /api/divisions/{animal_id} - Get divisions for an animal
-- GET /api/regions/{animal_id}/{division_id} - Get regions with images
-- GET /api/exam/{animal_id}/{division_id}/{region_id} - Generate quiz
-- GET /api/assets/{filename} - Serve static images
+## Key Files
+- `frontend/app/data.ts` - Todos los datos anatómicos
+- `frontend/app/localImages.ts` - Mapa de imágenes locales
+- `frontend/app/ExamShared.tsx` - Componente de examen compartido
+- `frontend/assets/images/` - 10 imágenes anatómicas
 
 ## Backlog
-- P1: Expand to other animals
-- P1: Quiz distractors now prioritize same anatomical region (completed Mar 1, 2026)
-- P2: Migrate data to MongoDB for scalability
-- P2: User registration and progress tracking
-- P3: More quiz modes (timed, practice, study)
+- P1: Expandir a otros animales
+- P2: Más vistas para otras regiones (Columna, Miembros)
+- P2: Sistema de registro y progreso
+- P3: Quiz cronometrado
