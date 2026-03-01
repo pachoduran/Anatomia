@@ -208,6 +208,25 @@ async def get_exam(animal_id: str, division_id: str, region_id: str, num: int = 
         "questions": questions
     }
 
+@api_router.get("/study/{animal_id}/{division_id}/{region_id}")
+async def get_study(animal_id: str, division_id: str, region_id: str):
+    if animal_id != "horse" or division_id not in SKELETON:
+        raise HTTPException(status_code=404, detail="No encontrado")
+    div = SKELETON[division_id]
+    if region_id not in div["regions"]:
+        raise HTTPException(status_code=404, detail="Región no encontrada")
+    region = div["regions"][region_id]
+    return {
+        "region": region["name"],
+        "desc": region["desc"],
+        "image": region["image"],
+        "bones": [
+            {"id": b["id"], "name": b["name"], "qty": b["qty"], "desc": b["desc"], "x": b["x"], "y": b["y"], "color": b["color"]}
+            for b in region["questions"]
+        ]
+    }
+
+
 # Servir assets (imágenes)
 @api_router.get("/assets/{filename}")
 async def get_asset(filename: str):
