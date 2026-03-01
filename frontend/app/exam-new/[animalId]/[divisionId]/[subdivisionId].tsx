@@ -72,7 +72,7 @@ export default function ExamScreen() {
   const loadExam = async () => {
     try {
       setLoading(true);
-      const res = await fetch(`${BACKEND_URL}/api/exam/${animalId}/${divisionId}/${regionId}?num=5`);
+      const res = await fetch(`${BACKEND_URL}/api/exam/${animalId}/${divisionId}/${subdivisionId}?num=5`);
       const data = await res.json();
       setExam(data);
       setIdx(0);
