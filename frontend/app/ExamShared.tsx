@@ -78,41 +78,42 @@ export function ExamComponent({ title, subtitle, imageKey, viewKey, questions, d
   const controlsSection = (
     <ScrollView
       style={isLandscape ? { flex: 1 } : undefined}
-      contentContainerStyle={isLandscape ? { paddingHorizontal: 4, paddingBottom: 20 } : undefined}
+      contentContainerStyle={isLandscape ? { paddingHorizontal: 4, paddingBottom: 10 } : undefined}
     >
       <View style={s.hint}>
         <View style={[s.hintDot, { backgroundColor: c }]} />
-        <Text style={s.hintTxt}>Identifica el hueso en <Text style={{ color: c, fontWeight: '700' }}>{q.color}</Text></Text>
+        <Text style={[s.hintTxt, isLandscape && { fontSize: 11 }]}>Hueso en <Text style={{ color: c, fontWeight: '700' }}>{q.color}</Text></Text>
       </View>
-      <Text style={s.desc}>Pista: {q.desc}</Text>
-      {q.qty > 1 && <Text style={s.qtyTxt}>Cantidad: {q.qty}</Text>}
+      <Text style={[s.desc, isLandscape && { fontSize: 10, marginBottom: 2 }]} numberOfLines={isLandscape ? 1 : undefined}>Pista: {q.desc}</Text>
 
-      {q.options.map((opt, i) => {
-        const letter = String.fromCharCode(65 + i);
-        const isSel = chosen === opt;
-        const isCorrect = opt === q.answer;
-        let bg = '#16213e'; let border = '#2a2a4a';
-        if (confirmed && isCorrect) { bg = 'rgba(51,204,51,0.15)'; border = '#33CC33'; }
-        else if (confirmed && isSel && !isCorrect) { bg = 'rgba(255,51,51,0.15)'; border = '#FF3333'; }
-        else if (isSel) { bg = 'rgba(78,205,196,0.15)'; border = '#4ECDC4'; }
-        return (
-          <TouchableOpacity key={opt} disabled={confirmed} style={[s.option, { backgroundColor: bg, borderColor: border }]} onPress={() => setChosen(opt)}>
-            <Text style={[s.optLetter, isSel && { color: '#4ECDC4' }]}>{letter}</Text>
-            <Text style={s.optText}>{opt}</Text>
-            {confirmed && isCorrect && <Ionicons name="checkmark-circle" size={20} color="#33CC33" />}
-            {confirmed && isSel && !isCorrect && <Ionicons name="close-circle" size={20} color="#FF3333" />}
-          </TouchableOpacity>
-        );
-      })}
+      <View style={isLandscape ? { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' } : undefined}>
+        {q.options.map((opt, i) => {
+          const letter = String.fromCharCode(65 + i);
+          const isSel = chosen === opt;
+          const isCorrect = opt === q.answer;
+          let bg = '#16213e'; let border = '#2a2a4a';
+          if (confirmed && isCorrect) { bg = 'rgba(51,204,51,0.15)'; border = '#33CC33'; }
+          else if (confirmed && isSel && !isCorrect) { bg = 'rgba(255,51,51,0.15)'; border = '#FF3333'; }
+          else if (isSel) { bg = 'rgba(78,205,196,0.15)'; border = '#4ECDC4'; }
+          return (
+            <TouchableOpacity key={opt} disabled={confirmed} style={[s.option, { backgroundColor: bg, borderColor: border }, isLandscape && { width: '48%', padding: 8, marginBottom: 4 }]} onPress={() => setChosen(opt)}>
+              <Text style={[s.optLetter, isSel && { color: '#4ECDC4' }, isLandscape && { fontSize: 12, width: 18 }]}>{letter}</Text>
+              <Text style={[s.optText, isLandscape && { fontSize: 11 }]} numberOfLines={1}>{opt}</Text>
+              {confirmed && isCorrect && <Ionicons name="checkmark-circle" size={isLandscape ? 16 : 20} color="#33CC33" />}
+              {confirmed && isSel && !isCorrect && <Ionicons name="close-circle" size={isLandscape ? 16 : 20} color="#FF3333" />}
+            </TouchableOpacity>
+          );
+        })}
+      </View>
 
       {!confirmed ? (
-        <TouchableOpacity style={[s.actionBtn, !chosen && s.actionDisabled]} disabled={!chosen} onPress={confirm}>
-          <Text style={s.actionTxt}>Confirmar</Text>
+        <TouchableOpacity style={[s.actionBtn, !chosen && s.actionDisabled, isLandscape && { padding: 10 }]} disabled={!chosen} onPress={confirm}>
+          <Text style={[s.actionTxt, isLandscape && { fontSize: 13 }]}>Confirmar</Text>
         </TouchableOpacity>
       ) : (
-        <TouchableOpacity style={s.actionBtn} onPress={next}>
-          <Text style={s.actionTxt}>{idx + 1 >= exam.length ? 'Ver Resultado' : 'Siguiente'}</Text>
-          <Ionicons name="arrow-forward" size={18} color="#fff" />
+        <TouchableOpacity style={[s.actionBtn, isLandscape && { padding: 10 }]} onPress={next}>
+          <Text style={[s.actionTxt, isLandscape && { fontSize: 13 }]}>{idx + 1 >= exam.length ? 'Ver Resultado' : 'Siguiente'}</Text>
+          <Ionicons name="arrow-forward" size={16} color="#fff" />
         </TouchableOpacity>
       )}
     </ScrollView>
