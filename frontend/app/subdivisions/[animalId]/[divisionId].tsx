@@ -1,17 +1,19 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Platform } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { Image } from 'expo-image';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { getRegions } from '../../data';
 import { getLocalImage } from '../../localImages';
 import { SafeScreen } from '../../SafeScreen';
+import { useOrientation } from '../../useOrientation';
 
 export default function SubdivisionsScreen() {
   const router = useRouter();
   const { animalId, divisionId } = useLocalSearchParams<{ animalId: string; divisionId: string }>();
   const regions = getRegions(animalId as string, divisionId as string);
   const color = divisionId === 'axial' ? '#4ECDC4' : '#FF6B6B';
+  const { isLandscape } = useOrientation();
 
   const navigate = (regionId: string, hasViews: boolean) => {
     if (hasViews) router.push(`/views/${animalId}/${divisionId}/${regionId}`);
@@ -27,13 +29,13 @@ export default function SubdivisionsScreen() {
         <Text style={s.headerTitle}>{divisionId === 'axial' ? 'Esqueleto Axial' : 'Esqueleto Apendicular'}</Text>
         <View style={{ width: 36 }} />
       </View>
-      <ScrollView contentContainerStyle={s.content}>
+      <ScrollView contentContainerStyle={[s.content, isLandscape && s.contentLand]}>
         {regions.map((r) => (
-          <View key={r.id} style={s.card}>
+          <View key={r.id} style={[s.card, isLandscape && s.cardLand]}>
             <TouchableOpacity onPress={() => navigate(r.id, !!r.views)}>
-              <Image source={getLocalImage(r.imageKey)} style={s.cardImg} contentFit="cover" />
-              <View style={[s.cardOverlay, { backgroundColor: `${color}30` }]}>
-                <Ionicons name="search" size={28} color="#fff" />
+              <Image source={getLocalImage(r.imageKey)} style={[s.cardImg, isLandscape && { height: 100 }]} contentFit="cover" />
+              <View style={[s.cardOverlay, { backgroundColor: `${color}30` }, isLandscape && { height: 100 }]}>
+                <Ionicons name="search" size={24} color="#fff" />
               </View>
             </TouchableOpacity>
             <View style={s.cardBody}>
@@ -70,16 +72,18 @@ export default function SubdivisionsScreen() {
 }
 
 const s = StyleSheet.create({
-  header: { flexDirection: 'row', alignItems: 'center', padding: 10, borderBottomWidth: 1, borderBottomColor: '#2a2a4a' },
+  header: { flexDirection: 'row', alignItems: 'center', padding: 8, borderBottomWidth: 1, borderBottomColor: '#2a2a4a' },
   backBtn: { width: 36, height: 36, borderRadius: 18, backgroundColor: '#16213e', justifyContent: 'center', alignItems: 'center' },
   headerTitle: { flex: 1, textAlign: 'center', fontSize: 16, fontWeight: 'bold', color: '#fff' },
   content: { padding: 10, paddingBottom: 40 },
+  contentLand: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' },
   card: { backgroundColor: '#16213e', borderRadius: 12, marginBottom: 10, overflow: 'hidden' },
+  cardLand: { width: '48.5%' },
   cardImg: { width: '100%', height: 130 },
   cardOverlay: { position: 'absolute', top: 0, left: 0, right: 0, height: 130, justifyContent: 'center', alignItems: 'center' },
   cardBody: { padding: 12 },
-  cardTitle: { fontSize: 16, fontWeight: '600', color: '#fff' },
-  cardDesc: { fontSize: 12, color: '#888', marginTop: 2 },
+  cardTitle: { fontSize: 15, fontWeight: '600', color: '#fff' },
+  cardDesc: { fontSize: 11, color: '#888', marginTop: 2 },
   viewsBadge: { flexDirection: 'row', alignItems: 'center', marginTop: 6, backgroundColor: 'rgba(255,234,167,0.1)', paddingHorizontal: 8, paddingVertical: 3, borderRadius: 8, alignSelf: 'flex-start' },
   viewsText: { color: '#FFEAA7', fontSize: 11, fontWeight: '500', marginLeft: 4 },
   row: { marginTop: 8 },

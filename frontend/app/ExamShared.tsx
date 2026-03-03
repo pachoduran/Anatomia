@@ -5,6 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { Bone, generateExam, getDivisionBoneNames } from './data';
 import { getLocalImage } from './localImages';
+import { useOrientation } from './useOrientation';
 
 const COLORS: Record<string, string> = { Rojo: '#FF3333', Azul: '#3366FF', Verde: '#33CC33', Amarillo: '#FFCC00', Naranja: '#FF6600', Morado: '#9933FF' };
 
@@ -20,6 +21,7 @@ interface Props {
 
 export function ExamComponent({ title, subtitle, imageKey, viewKey, questions, divisionBoneNames }: Props) {
   const router = useRouter();
+  const { isLandscape, height } = useOrientation();
   const exam = useMemo(() => generateExam(questions, divisionBoneNames, 5), []);
   const [idx, setIdx] = useState(0);
   const [chosen, setChosen] = useState<string | null>(null);
@@ -32,18 +34,8 @@ export function ExamComponent({ title, subtitle, imageKey, viewKey, questions, d
   const q = exam[idx];
   const c = COLORS[q.color] || '#FF3333';
 
-  const confirm = () => {
-    if (!chosen) return;
-    setConfirmed(true);
-    if (chosen === q.answer) setScore(s => s + 1);
-  };
-
-  const next = () => {
-    if (idx + 1 >= exam.length) { setDone(true); return; }
-    setIdx(i => i + 1);
-    setChosen(null);
-    setConfirmed(false);
-  };
+  const confirm = () => { if (!chosen) return; setConfirmed(true); if (chosen === q.answer) setScore(s => s + 1); };
+  const next = () => { if (idx + 1 >= exam.length) { setDone(true); return; } setIdx(i => i + 1); setChosen(null); setConfirmed(false); };
 
   if (done) {
     const pct = Math.round((score / exam.length) * 100);
@@ -53,7 +45,7 @@ export function ExamComponent({ title, subtitle, imageKey, viewKey, questions, d
           <View style={s.resultCard}>
             <Text style={s.resultIcon}>{pct >= 70 ? '🏆' : pct >= 40 ? '📖' : '💪'}</Text>
             <Text style={s.resultPct}>{pct}%</Text>
-            <Text style={s.resultLabel}>{pct >= 70 ? '¡Excelente!' : pct >= 40 ? 'Buen intento' : 'Sigue practicando'}</Text>
+            <Text style={s.resultLabel}>{pct >= 70 ? 'Excelente!' : pct >= 40 ? 'Buen intento' : 'Sigue practicando'}</Text>
             <View style={s.resultRow}>
               <Text style={s.resultOk}>{score} correctas</Text>
               <Text style={s.resultBad}>{exam.length - score} incorrectas</Text>
@@ -70,6 +62,62 @@ export function ExamComponent({ title, subtitle, imageKey, viewKey, questions, d
     );
   }
 
+  const imgHeight = isLandscape ? height - 80 : 220;
+
+  const imageSection = (
+    <View style={[s.imgCard, isLandscape && { flex: 1, marginBottom: 0, marginRight: 8 }]}>
+      <View style={s.imgWrap}>
+        <Image source={getLocalImage(imageKey, viewKey)} style={[s.img, { height: imgHeight }]} contentFit="contain" />
+        <View style={[s.marker, { left: `${q.x}%`, top: `${q.y}%`, borderColor: c }]}>
+          <View style={[s.markerDot, { backgroundColor: c }]} />
+        </View>
+      </View>
+    </View>
+  );
+
+  const controlsSection = (
+    <ScrollView
+      style={isLandscape ? { flex: 1 } : undefined}
+      contentContainerStyle={isLandscape ? { paddingHorizontal: 4, paddingBottom: 20 } : undefined}
+    >
+      <View style={s.hint}>
+        <View style={[s.hintDot, { backgroundColor: c }]} />
+        <Text style={s.hintTxt}>Identifica el hueso en <Text style={{ color: c, fontWeight: '700' }}>{q.color}</Text></Text>
+      </View>
+      <Text style={s.desc}>Pista: {q.desc}</Text>
+      {q.qty > 1 && <Text style={s.qtyTxt}>Cantidad: {q.qty}</Text>}
+
+      {q.options.map((opt, i) => {
+        const letter = String.fromCharCode(65 + i);
+        const isSel = chosen === opt;
+        const isCorrect = opt === q.answer;
+        let bg = '#16213e'; let border = '#2a2a4a';
+        if (confirmed && isCorrect) { bg = 'rgba(51,204,51,0.15)'; border = '#33CC33'; }
+        else if (confirmed && isSel && !isCorrect) { bg = 'rgba(255,51,51,0.15)'; border = '#FF3333'; }
+        else if (isSel) { bg = 'rgba(78,205,196,0.15)'; border = '#4ECDC4'; }
+        return (
+          <TouchableOpacity key={opt} disabled={confirmed} style={[s.option, { backgroundColor: bg, borderColor: border }]} onPress={() => setChosen(opt)}>
+            <Text style={[s.optLetter, isSel && { color: '#4ECDC4' }]}>{letter}</Text>
+            <Text style={s.optText}>{opt}</Text>
+            {confirmed && isCorrect && <Ionicons name="checkmark-circle" size={20} color="#33CC33" />}
+            {confirmed && isSel && !isCorrect && <Ionicons name="close-circle" size={20} color="#FF3333" />}
+          </TouchableOpacity>
+        );
+      })}
+
+      {!confirmed ? (
+        <TouchableOpacity style={[s.actionBtn, !chosen && s.actionDisabled]} disabled={!chosen} onPress={confirm}>
+          <Text style={s.actionTxt}>Confirmar</Text>
+        </TouchableOpacity>
+      ) : (
+        <TouchableOpacity style={s.actionBtn} onPress={next}>
+          <Text style={s.actionTxt}>{idx + 1 >= exam.length ? 'Ver Resultado' : 'Siguiente'}</Text>
+          <Ionicons name="arrow-forward" size={18} color="#fff" />
+        </TouchableOpacity>
+      )}
+    </ScrollView>
+  );
+
   return (
     <View style={s.container}>
       <View style={s.header}>
@@ -77,71 +125,69 @@ export function ExamComponent({ title, subtitle, imageKey, viewKey, questions, d
         <View style={s.hCenter}><Text style={s.hTitle}>{title}</Text><Text style={s.hSub}>{subtitle}</Text></View>
         <Text style={s.hCount}>{idx + 1}/{exam.length}</Text>
       </View>
-
       <View style={s.progress}><View style={[s.progressBar, { width: `${((idx + 1) / exam.length) * 100}%` }]} /></View>
 
-      <ScrollView contentContainerStyle={s.scroll}>
-        <View style={s.imgCard}>
-          <View style={s.imgWrap}>
-            <Image source={getLocalImage(imageKey, viewKey)} style={s.img} contentFit="contain" />
-            <View style={[s.marker, { left: `${q.x}%`, top: `${q.y}%`, borderColor: c }]}>
-              <View style={[s.markerDot, { backgroundColor: c }]} />
-            </View>
+      {isLandscape ? (
+        <View style={s.landscapeRow}>
+          {imageSection}
+          {controlsSection}
+        </View>
+      ) : (
+        <ScrollView contentContainerStyle={s.scroll}>
+          {imageSection}
+          <View style={s.hint}>
+            <View style={[s.hintDot, { backgroundColor: c }]} />
+            <Text style={s.hintTxt}>Identifica el hueso en <Text style={{ color: c, fontWeight: '700' }}>{q.color}</Text></Text>
           </View>
-        </View>
+          <Text style={s.desc}>Pista: {q.desc}</Text>
+          {q.qty > 1 && <Text style={s.qtyTxt}>Cantidad: {q.qty}</Text>}
 
-        <View style={s.hint}>
-          <View style={[s.hintDot, { backgroundColor: c }]} />
-          <Text style={s.hintTxt}>Identifica el hueso marcado en <Text style={{ color: c, fontWeight: '700' }}>{q.color}</Text></Text>
-        </View>
-        <Text style={s.desc}>Pista: {q.desc}</Text>
-        {q.qty > 1 && <Text style={s.qtyTxt}>Cantidad: {q.qty}</Text>}
+          {q.options.map((opt, i) => {
+            const letter = String.fromCharCode(65 + i);
+            const isSel = chosen === opt;
+            const isCorrect = opt === q.answer;
+            let bg = '#16213e'; let border = '#2a2a4a';
+            if (confirmed && isCorrect) { bg = 'rgba(51,204,51,0.15)'; border = '#33CC33'; }
+            else if (confirmed && isSel && !isCorrect) { bg = 'rgba(255,51,51,0.15)'; border = '#FF3333'; }
+            else if (isSel) { bg = 'rgba(78,205,196,0.15)'; border = '#4ECDC4'; }
+            return (
+              <TouchableOpacity key={opt} disabled={confirmed} style={[s.option, { backgroundColor: bg, borderColor: border }]} onPress={() => setChosen(opt)}>
+                <Text style={[s.optLetter, isSel && { color: '#4ECDC4' }]}>{letter}</Text>
+                <Text style={s.optText}>{opt}</Text>
+                {confirmed && isCorrect && <Ionicons name="checkmark-circle" size={20} color="#33CC33" />}
+                {confirmed && isSel && !isCorrect && <Ionicons name="close-circle" size={20} color="#FF3333" />}
+              </TouchableOpacity>
+            );
+          })}
 
-        {q.options.map((opt, i) => {
-          const letter = String.fromCharCode(65 + i);
-          const isSel = chosen === opt;
-          const isCorrect = opt === q.answer;
-          let bg = '#16213e'; let border = '#2a2a4a';
-          if (confirmed && isCorrect) { bg = 'rgba(51,204,51,0.15)'; border = '#33CC33'; }
-          else if (confirmed && isSel && !isCorrect) { bg = 'rgba(255,51,51,0.15)'; border = '#FF3333'; }
-          else if (isSel) { bg = 'rgba(78,205,196,0.15)'; border = '#4ECDC4'; }
-          return (
-            <TouchableOpacity key={opt} disabled={confirmed} style={[s.option, { backgroundColor: bg, borderColor: border }]} onPress={() => setChosen(opt)}>
-              <Text style={[s.optLetter, isSel && { color: '#4ECDC4' }]}>{letter}</Text>
-              <Text style={s.optText}>{opt}</Text>
-              {confirmed && isCorrect && <Ionicons name="checkmark-circle" size={20} color="#33CC33" />}
-              {confirmed && isSel && !isCorrect && <Ionicons name="close-circle" size={20} color="#FF3333" />}
+          {!confirmed ? (
+            <TouchableOpacity style={[s.actionBtn, !chosen && s.actionDisabled]} disabled={!chosen} onPress={confirm}>
+              <Text style={s.actionTxt}>Confirmar</Text>
             </TouchableOpacity>
-          );
-        })}
-
-        {!confirmed ? (
-          <TouchableOpacity style={[s.actionBtn, !chosen && s.actionDisabled]} disabled={!chosen} onPress={confirm}>
-            <Text style={s.actionTxt}>Confirmar</Text>
-          </TouchableOpacity>
-        ) : (
-          <TouchableOpacity style={s.actionBtn} onPress={next}>
-            <Text style={s.actionTxt}>{idx + 1 >= exam.length ? 'Ver Resultado' : 'Siguiente'}</Text>
-            <Ionicons name="arrow-forward" size={18} color="#fff" />
-          </TouchableOpacity>
-        )}
-      </ScrollView>
+          ) : (
+            <TouchableOpacity style={s.actionBtn} onPress={next}>
+              <Text style={s.actionTxt}>{idx + 1 >= exam.length ? 'Ver Resultado' : 'Siguiente'}</Text>
+              <Ionicons name="arrow-forward" size={18} color="#fff" />
+            </TouchableOpacity>
+          )}
+        </ScrollView>
+      )}
     </View>
   );
 }
 
-const TOP = Platform.OS === 'android' ? 30 : 0;
 const s = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#1a1a2e', paddingTop: TOP },
+  container: { flex: 1, backgroundColor: '#1a1a2e' },
   center: { flex: 1, backgroundColor: '#1a1a2e', justifyContent: 'center', alignItems: 'center' },
   err: { color: '#FF6B6B' },
-  header: { flexDirection: 'row', alignItems: 'center', padding: 10, borderBottomWidth: 1, borderBottomColor: '#2a2a4a' },
-  hBack: { width: 36, height: 36, borderRadius: 18, backgroundColor: '#16213e', justifyContent: 'center', alignItems: 'center' },
-  hCenter: { flex: 1, alignItems: 'center' }, hTitle: { fontSize: 14, fontWeight: 'bold', color: '#fff' }, hSub: { fontSize: 10, color: '#4ECDC4' },
+  header: { flexDirection: 'row', alignItems: 'center', padding: 8, borderBottomWidth: 1, borderBottomColor: '#2a2a4a' },
+  hBack: { width: 34, height: 34, borderRadius: 17, backgroundColor: '#16213e', justifyContent: 'center', alignItems: 'center' },
+  hCenter: { flex: 1, alignItems: 'center' }, hTitle: { fontSize: 13, fontWeight: 'bold', color: '#fff' }, hSub: { fontSize: 10, color: '#4ECDC4' },
   hCount: { color: '#888', fontSize: 13, fontWeight: '600' },
   progress: { height: 3, backgroundColor: '#16213e' },
   progressBar: { height: 3, backgroundColor: '#4ECDC4' },
   scroll: { padding: 10, paddingBottom: 40 },
+  landscapeRow: { flex: 1, flexDirection: 'row', padding: 6 },
   imgCard: { backgroundColor: '#0f1629', borderRadius: 10, overflow: 'hidden', marginBottom: 8 },
   imgWrap: { position: 'relative', backgroundColor: '#fff' },
   img: { width: '100%', height: 220 },

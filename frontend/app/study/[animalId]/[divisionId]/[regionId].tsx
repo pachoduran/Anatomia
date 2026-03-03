@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Platform } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { Image } from 'expo-image';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { getRegion, Bone } from '../../../data';
 import { getLocalImage } from '../../../localImages';
 import { SafeScreen } from '../../../SafeScreen';
+import { useOrientation } from '../../../useOrientation';
 
 const COLORS: Record<string, string> = { Rojo: '#FF3333', Azul: '#3366FF', Verde: '#33CC33', Amarillo: '#FFCC00', Naranja: '#FF6600', Morado: '#9933FF' };
 
@@ -15,8 +16,56 @@ export default function StudyScreen() {
   const region = getRegion(animalId!, divisionId!, regionId!);
   const [selected, setSelected] = useState<Bone | null>(null);
   const [showLabels, setShowLabels] = useState(true);
+  const { isLandscape, height } = useOrientation();
 
   if (!region) return <View style={s.center}><Text style={s.err}>No encontrado</Text></View>;
+
+  const imgHeight = isLandscape ? height - 80 : 280;
+
+  const imageSection = (
+    <View style={[s.imgCard, isLandscape && { flex: 3, marginBottom: 0, marginRight: 8 }]}>
+      <View style={s.imgWrap}>
+        <Image source={getLocalImage(region.imageKey)} style={[s.img, { height: imgHeight }]} contentFit="contain" />
+        {region.questions.map(b => {
+          const c = COLORS[b.color] || '#FF3333';
+          return (
+            <TouchableOpacity key={b.id} style={[s.marker, { left: `${b.x}%`, top: `${b.y}%`, borderColor: c, backgroundColor: selected?.id === b.id ? `${c}60` : `${c}30` }]} onPress={() => setSelected(selected?.id === b.id ? null : b)}>
+              <View style={[s.dot, { backgroundColor: c }]} />
+            </TouchableOpacity>
+          );
+        })}
+        {showLabels && region.questions.map(b => {
+          const c = COLORS[b.color] || '#FF3333'; const l = b.x > 60;
+          return <View key={`l${b.id}`} style={[s.label, { left: l ? undefined : `${b.x+4}%`, right: l ? `${100-b.x+4}%` : undefined, top: `${b.y-1}%` }]}><Text style={[s.labelTxt, { color: c }]} numberOfLines={1}>{b.name}</Text></View>;
+        })}
+      </View>
+    </View>
+  );
+
+  const listSection = (
+    <ScrollView style={isLandscape ? { flex: 2 } : undefined} contentContainerStyle={isLandscape ? { paddingBottom: 20 } : undefined}>
+      {selected && (
+        <View style={[s.detail, { borderLeftColor: COLORS[selected.color] || '#FF3333' }]}>
+          <View style={s.detailRow}><View style={[s.detailDot, { backgroundColor: COLORS[selected.color] }]} /><Text style={s.detailName}>{selected.name}</Text>{selected.qty > 1 && <Text style={s.qty}>x{selected.qty}</Text>}</View>
+          <Text style={s.detailDesc}>{selected.desc}</Text>
+        </View>
+      )}
+      <Text style={s.listTitle}>Huesos ({region.questions.length})</Text>
+      {region.questions.map(b => {
+        const c = COLORS[b.color] || '#FF3333'; const sel = selected?.id === b.id;
+        return (
+          <TouchableOpacity key={b.id} style={[s.bone, sel && { borderColor: c, backgroundColor: `${c}10` }]} onPress={() => setSelected(sel ? null : b)}>
+            <View style={[s.boneDot, { backgroundColor: c }]} />
+            <View style={s.boneInfo}><Text style={[s.boneName, sel && { color: c }]}>{b.name}</Text><Text style={s.boneDesc} numberOfLines={1}>{b.desc}</Text></View>
+            {b.qty > 1 && <Text style={s.boneQty}>x{b.qty}</Text>}
+          </TouchableOpacity>
+        );
+      })}
+      <TouchableOpacity style={s.examBtn} onPress={() => router.replace(`/exam-new/${animalId}/${divisionId}/${regionId}`)}>
+        <Ionicons name="school-outline" size={18} color="#fff" /><Text style={s.examTxt}>Ir al Examen</Text>
+      </TouchableOpacity>
+    </ScrollView>
+  );
 
   return (
     <SafeScreen>
@@ -27,45 +76,33 @@ export default function StudyScreen() {
           <Ionicons name={showLabels ? 'eye' : 'eye-off'} size={18} color={showLabels ? '#1a1a2e' : '#888'} />
         </TouchableOpacity>
       </View>
-      <ScrollView contentContainerStyle={s.scroll}>
-        <View style={s.imgCard}>
-          <View style={s.imgWrap}>
-            <Image source={getLocalImage(region.imageKey)} style={s.img} contentFit="contain" />
-            {region.questions.map(b => {
-              const c = COLORS[b.color] || '#FF3333';
-              return (
-                <TouchableOpacity key={b.id} style={[s.marker, { left: `${b.x}%`, top: `${b.y}%`, borderColor: c, backgroundColor: selected?.id === b.id ? `${c}60` : `${c}30` }]} onPress={() => setSelected(selected?.id === b.id ? null : b)}>
-                  <View style={[s.dot, { backgroundColor: c }]} />
-                </TouchableOpacity>
-              );
-            })}
-            {showLabels && region.questions.map(b => {
-              const c = COLORS[b.color] || '#FF3333'; const l = b.x > 60;
-              return <View key={`l${b.id}`} style={[s.label, { left: l ? undefined : `${b.x+4}%`, right: l ? `${100-b.x+4}%` : undefined, top: `${b.y-1}%` }]}><Text style={[s.labelTxt, { color: c }]} numberOfLines={1}>{b.name}</Text></View>;
-            })}
-          </View>
-        </View>
-        {selected && (
-          <View style={[s.detail, { borderLeftColor: COLORS[selected.color] || '#FF3333' }]}>
-            <View style={s.detailRow}><View style={[s.detailDot, { backgroundColor: COLORS[selected.color] }]} /><Text style={s.detailName}>{selected.name}</Text>{selected.qty > 1 && <Text style={s.qty}>×{selected.qty}</Text>}</View>
-            <Text style={s.detailDesc}>{selected.desc}</Text>
-          </View>
-        )}
-        <Text style={s.listTitle}>Huesos ({region.questions.length})</Text>
-        {region.questions.map(b => {
-          const c = COLORS[b.color] || '#FF3333'; const sel = selected?.id === b.id;
-          return (
-            <TouchableOpacity key={b.id} style={[s.bone, sel && { borderColor: c, backgroundColor: `${c}10` }]} onPress={() => setSelected(sel ? null : b)}>
-              <View style={[s.boneDot, { backgroundColor: c }]} />
-              <View style={s.boneInfo}><Text style={[s.boneName, sel && { color: c }]}>{b.name}</Text><Text style={s.boneDesc} numberOfLines={1}>{b.desc}</Text></View>
-              {b.qty > 1 && <Text style={s.boneQty}>×{b.qty}</Text>}
-            </TouchableOpacity>
-          );
-        })}
-        <TouchableOpacity style={s.examBtn} onPress={() => router.replace(`/exam-new/${animalId}/${divisionId}/${regionId}`)}>
-          <Ionicons name="school-outline" size={18} color="#fff" /><Text style={s.examTxt}>Ir al Examen</Text>
-        </TouchableOpacity>
-      </ScrollView>
+      {isLandscape ? (
+        <View style={s.landscapeRow}>{imageSection}{listSection}</View>
+      ) : (
+        <ScrollView contentContainerStyle={s.scroll}>
+          {imageSection}
+          {selected && (
+            <View style={[s.detail, { borderLeftColor: COLORS[selected.color] || '#FF3333' }]}>
+              <View style={s.detailRow}><View style={[s.detailDot, { backgroundColor: COLORS[selected.color] }]} /><Text style={s.detailName}>{selected.name}</Text>{selected.qty > 1 && <Text style={s.qty}>x{selected.qty}</Text>}</View>
+              <Text style={s.detailDesc}>{selected.desc}</Text>
+            </View>
+          )}
+          <Text style={s.listTitle}>Huesos ({region.questions.length})</Text>
+          {region.questions.map(b => {
+            const c = COLORS[b.color] || '#FF3333'; const sel = selected?.id === b.id;
+            return (
+              <TouchableOpacity key={b.id} style={[s.bone, sel && { borderColor: c, backgroundColor: `${c}10` }]} onPress={() => setSelected(sel ? null : b)}>
+                <View style={[s.boneDot, { backgroundColor: c }]} />
+                <View style={s.boneInfo}><Text style={[s.boneName, sel && { color: c }]}>{b.name}</Text><Text style={s.boneDesc} numberOfLines={1}>{b.desc}</Text></View>
+                {b.qty > 1 && <Text style={s.boneQty}>x{b.qty}</Text>}
+              </TouchableOpacity>
+            );
+          })}
+          <TouchableOpacity style={s.examBtn} onPress={() => router.replace(`/exam-new/${animalId}/${divisionId}/${regionId}`)}>
+            <Ionicons name="school-outline" size={18} color="#fff" /><Text style={s.examTxt}>Ir al Examen</Text>
+          </TouchableOpacity>
+        </ScrollView>
+      )}
     </SafeScreen>
   );
 }
@@ -73,12 +110,13 @@ export default function StudyScreen() {
 const s = StyleSheet.create({
   center: { flex: 1, backgroundColor: '#1a1a2e', justifyContent: 'center', alignItems: 'center' },
   err: { color: '#FF6B6B' },
-  header: { flexDirection: 'row', alignItems: 'center', padding: 10, borderBottomWidth: 1, borderBottomColor: '#2a2a4a' },
+  header: { flexDirection: 'row', alignItems: 'center', padding: 8, borderBottomWidth: 1, borderBottomColor: '#2a2a4a' },
   backBtn: { width: 36, height: 36, borderRadius: 18, backgroundColor: '#16213e', justifyContent: 'center', alignItems: 'center' },
   hCenter: { flex: 1, alignItems: 'center' }, hTitle: { fontSize: 15, fontWeight: 'bold', color: '#fff' }, hSub: { fontSize: 10, color: '#4ECDC4' },
   toggle: { width: 36, height: 36, borderRadius: 18, backgroundColor: '#16213e', justifyContent: 'center', alignItems: 'center' },
   toggleOn: { backgroundColor: '#4ECDC4' },
   scroll: { padding: 10, paddingBottom: 40 },
+  landscapeRow: { flex: 1, flexDirection: 'row', padding: 6 },
   imgCard: { backgroundColor: '#0f1629', borderRadius: 10, overflow: 'hidden', marginBottom: 10 },
   imgWrap: { position: 'relative', backgroundColor: '#fff' },
   img: { width: '100%', height: 280 },

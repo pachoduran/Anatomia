@@ -1,18 +1,20 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Platform } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { Image } from 'expo-image';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { getRegion } from '../../../data';
 import { getLocalImage } from '../../../localImages';
 import { SafeScreen } from '../../../SafeScreen';
+import { useOrientation } from '../../../useOrientation';
 
-const ICONS: Record<string, string> = { dorsal: 'arrow-up-circle', ventral: 'arrow-down-circle', lateral: 'arrow-forward-circle', caudal: 'arrow-back-circle', rostral: 'eye' };
+const ICONS: Record<string, string> = { dorsal: 'arrow-up-circle', ventral: 'arrow-down-circle', lateral: 'arrow-forward-circle', caudal: 'arrow-back-circle', rostral: 'eye', nucal: 'arrow-back-circle', palmar: 'hand-left', dorsopalmar: 'scan', oblicua: 'git-branch' };
 
 export default function ViewsScreen() {
   const router = useRouter();
   const { animalId, divisionId, regionId } = useLocalSearchParams<{ animalId: string; divisionId: string; regionId: string }>();
   const region = getRegion(animalId as string, divisionId as string, regionId as string);
+  const { isLandscape } = useOrientation();
 
   if (!region?.views) return <View style={s.center}><Text style={s.err}>Sin vistas</Text></View>;
 
@@ -24,16 +26,16 @@ export default function ViewsScreen() {
         </TouchableOpacity>
         <View style={s.headerCenter}>
           <Text style={s.headerTitle}>{region.name}</Text>
-          <Text style={s.headerSub}>{region.views.length} vistas anatómicas</Text>
+          <Text style={s.headerSub}>{region.views.length} vistas anatomicas</Text>
         </View>
         <View style={{ width: 36 }} />
       </View>
-      <ScrollView contentContainerStyle={s.content}>
+      <ScrollView contentContainerStyle={[s.content, isLandscape && s.contentLand]}>
         {region.views.map((v) => (
-          <View key={v.id} style={s.card}>
+          <View key={v.id} style={[s.card, isLandscape && s.cardLand]}>
             <TouchableOpacity onPress={() => router.push(`/study-view/${animalId}/${divisionId}/${regionId}/${v.id}`)}>
-              <Image source={getLocalImage(regionId as string, v.id)} style={s.cardImg} contentFit="cover" />
-              <View style={s.overlay}><Ionicons name={(ICONS[v.id] || 'eye') as any} size={28} color="#fff" /></View>
+              <Image source={getLocalImage(regionId as string, v.id)} style={[s.cardImg, isLandscape && { height: 100 }]} contentFit="cover" />
+              <View style={[s.overlay, isLandscape && { height: 100 }]}><Ionicons name={(ICONS[v.id] || 'eye') as any} size={24} color="#fff" /></View>
             </TouchableOpacity>
             <View style={s.cardBody}>
               <Text style={s.cardTitle}>{v.name}</Text>
@@ -62,13 +64,15 @@ export default function ViewsScreen() {
 const s = StyleSheet.create({
   center: { flex: 1, backgroundColor: '#1a1a2e', justifyContent: 'center', alignItems: 'center' },
   err: { color: '#FF6B6B', fontSize: 16 },
-  header: { flexDirection: 'row', alignItems: 'center', padding: 10, borderBottomWidth: 1, borderBottomColor: '#2a2a4a' },
+  header: { flexDirection: 'row', alignItems: 'center', padding: 8, borderBottomWidth: 1, borderBottomColor: '#2a2a4a' },
   backBtn: { width: 36, height: 36, borderRadius: 18, backgroundColor: '#16213e', justifyContent: 'center', alignItems: 'center' },
   headerCenter: { flex: 1, alignItems: 'center' },
   headerTitle: { fontSize: 16, fontWeight: 'bold', color: '#fff' },
   headerSub: { fontSize: 11, color: '#4ECDC4' },
   content: { padding: 10, paddingBottom: 40 },
+  contentLand: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' },
   card: { backgroundColor: '#16213e', borderRadius: 12, marginBottom: 10, overflow: 'hidden' },
+  cardLand: { width: '48.5%' },
   cardImg: { width: '100%', height: 130 },
   overlay: { position: 'absolute', top: 0, left: 0, right: 0, height: 130, backgroundColor: 'rgba(26,26,46,0.3)', justifyContent: 'center', alignItems: 'center' },
   cardBody: { padding: 12 },
