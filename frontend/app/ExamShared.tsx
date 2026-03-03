@@ -65,7 +65,7 @@ export function ExamComponent({ title, subtitle, imageKey, viewKey, questions, d
   const imgHeight = isLandscape ? height - 80 : 220;
 
   const imageSection = (
-    <View style={[s.imgCard, isLandscape && { flex: 1, marginBottom: 0, marginRight: 8 }]}>
+    <View style={[s.imgCard, isLandscape && { flex: 2, marginBottom: 0, marginRight: 6 }]}>
       <View style={s.imgWrap}>
         <Image source={getLocalImage(imageKey, viewKey)} style={[s.img, { height: imgHeight }]} contentFit="contain" />
         <View style={[s.marker, { left: `${q.x}%`, top: `${q.y}%`, borderColor: c }]}>

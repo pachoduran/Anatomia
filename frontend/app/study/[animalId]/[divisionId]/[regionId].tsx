@@ -23,7 +23,7 @@ export default function StudyScreen() {
   const imgHeight = isLandscape ? height - 80 : 280;
 
   const imageSection = (
-    <View style={[s.imgCard, isLandscape && { flex: 3, marginBottom: 0, marginRight: 8 }]}>
+    <View style={[s.imgCard, isLandscape && { flex: 2, marginBottom: 0, marginRight: 6 }]}>
       <View style={s.imgWrap}>
         <Image source={getLocalImage(region.imageKey)} style={[s.img, { height: imgHeight }]} contentFit="contain" />
         {region.questions.map(b => {
