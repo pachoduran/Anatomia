@@ -8,6 +8,8 @@ export function SafeScreen({ children }: { children: React.ReactNode }) {
     <View style={[styles.container, {
       paddingTop: Math.max(insets.top, Platform.OS === 'android' ? 48 : 0),
       paddingBottom: Math.max(insets.bottom, Platform.OS === 'android' ? 24 : 0),
+      paddingLeft: Math.max(insets.left, 0),
+      paddingRight: Math.max(insets.right, 0),
     }]}>
       {children}
     </View>

@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Platform } from '
 import { Image } from 'expo-image';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Bone, generateExam, getDivisionBoneNames } from './data';
 import { getLocalImage } from './localImages';
 import { useOrientation } from './useOrientation';
@@ -22,6 +23,7 @@ interface Props {
 export function ExamComponent({ title, subtitle, imageKey, viewKey, questions, divisionBoneNames }: Props) {
   const router = useRouter();
   const { isLandscape, height } = useOrientation();
+  const insets = useSafeAreaInsets();
   const exam = useMemo(() => generateExam(questions, divisionBoneNames, 5), []);
   const [idx, setIdx] = useState(0);
   const [chosen, setChosen] = useState<string | null>(null);
@@ -120,7 +122,7 @@ export function ExamComponent({ title, subtitle, imageKey, viewKey, questions, d
   );
 
   return (
-    <View style={s.container}>
+    <View style={[s.container, { paddingTop: Math.max(insets.top, 24), paddingBottom: Math.max(insets.bottom, 8), paddingLeft: Math.max(insets.left, 0), paddingRight: Math.max(insets.right, 0) }]}>
       <View style={s.header}>
         <TouchableOpacity style={s.hBack} onPress={() => router.back()}><Ionicons name="close" size={22} color="#fff" /></TouchableOpacity>
         <View style={s.hCenter}><Text style={s.hTitle}>{title}</Text><Text style={s.hSub}>{subtitle}</Text></View>

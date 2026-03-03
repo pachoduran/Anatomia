@@ -44,26 +44,26 @@ export default function StudyViewScreen() {
   );
 
   const listSection = (
-    <ScrollView style={isLandscape ? { flex: 2 } : undefined} contentContainerStyle={isLandscape ? { paddingBottom: 20 } : undefined}>
+    <ScrollView style={isLandscape ? { flex: 1 } : undefined} contentContainerStyle={isLandscape ? { paddingBottom: 10 } : undefined}>
       {selected && (
-        <View style={[s.detail, { borderLeftColor: COLORS[selected.color] || '#FF3333' }]}>
-          <View style={s.detailRow}><View style={[s.detailDot, { backgroundColor: COLORS[selected.color] }]} /><Text style={s.detailName}>{selected.name}</Text>{selected.qty > 1 && <Text style={s.qty}>x{selected.qty}</Text>}</View>
-          <Text style={s.detailDesc}>{selected.desc}</Text>
+        <View style={[s.detail, { borderLeftColor: COLORS[selected.color] || '#FF3333' }, isLandscape && { padding: 8 }]}>
+          <View style={s.detailRow}><View style={[s.detailDot, { backgroundColor: COLORS[selected.color] }]} /><Text style={[s.detailName, isLandscape && { fontSize: 13 }]}>{selected.name}</Text>{selected.qty > 1 && <Text style={s.qty}>x{selected.qty}</Text>}</View>
+          <Text style={[s.detailDesc, isLandscape && { fontSize: 11 }]}>{selected.desc}</Text>
         </View>
       )}
-      <Text style={s.listTitle}>Estructuras ({view.questions.length})</Text>
+      <Text style={[s.listTitle, isLandscape && { fontSize: 11 }]}>Estructuras ({view.questions.length})</Text>
       {view.questions.map(b => {
         const c = COLORS[b.color] || '#FF3333'; const sel = selected?.id === b.id;
         return (
-          <TouchableOpacity key={b.id} style={[s.bone, sel && { borderColor: c, backgroundColor: `${c}10` }]} onPress={() => setSelected(sel ? null : b)}>
-            <View style={[s.boneDot, { backgroundColor: c }]} />
-            <View style={s.boneInfo}><Text style={[s.boneName, sel && { color: c }]}>{b.name}</Text><Text style={s.boneDesc} numberOfLines={1}>{b.desc}</Text></View>
-            {b.qty > 1 && <Text style={s.boneQty}>x{b.qty}</Text>}
+          <TouchableOpacity key={b.id} style={[s.bone, sel && { borderColor: c, backgroundColor: `${c}10` }, isLandscape && { padding: 6, marginBottom: 3 }]} onPress={() => setSelected(sel ? null : b)}>
+            <View style={[s.boneDot, { backgroundColor: c }, isLandscape && { width: 6, height: 6, borderRadius: 3 }]} />
+            <View style={s.boneInfo}><Text style={[s.boneName, sel && { color: c }, isLandscape && { fontSize: 12 }]}>{b.name}</Text>{!isLandscape && <Text style={s.boneDesc} numberOfLines={1}>{b.desc}</Text>}</View>
+            {b.qty > 1 && <Text style={[s.boneQty, isLandscape && { fontSize: 11 }]}>x{b.qty}</Text>}
           </TouchableOpacity>
         );
       })}
-      <TouchableOpacity style={s.examBtn} onPress={() => router.replace(`/exam-view/${animalId}/${divisionId}/${regionId}/${viewId}`)}>
-        <Ionicons name="school-outline" size={18} color="#fff" /><Text style={s.examTxt}>Examen de esta Vista</Text>
+      <TouchableOpacity style={[s.examBtn, isLandscape && { padding: 10 }]} onPress={() => router.replace(`/exam-view/${animalId}/${divisionId}/${regionId}/${viewId}`)}>
+        <Ionicons name="school-outline" size={isLandscape ? 14 : 18} color="#fff" /><Text style={[s.examTxt, isLandscape && { fontSize: 12 }]}>Examen</Text>
       </TouchableOpacity>
     </ScrollView>
   );
