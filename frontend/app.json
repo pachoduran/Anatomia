@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "VetBones",
-    "slug": "vetbones",
+    "name": "MorphoVet",
+    "slug": "morphovet",
     "version": "1.0.0",
     "orientation": "default",
     "icon": "./assets/images/icon.png",
-    "scheme": "vetbones",
+    "scheme": "morphovet",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {

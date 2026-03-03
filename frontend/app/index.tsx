@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Platform } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { Image } from 'expo-image';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
@@ -14,8 +14,8 @@ export default function HomeScreen() {
   return (
     <SafeScreen>
       <ScrollView contentContainerStyle={s.content}>
-        <Text style={s.title}>VetBones</Text>
-        <Text style={s.subtitle}>Sistema Óseo Veterinario</Text>
+        <Image source={require('../assets/images/morphovet_logo.png')} style={s.logo} contentFit="contain" />
+        <Text style={s.subtitle}>Anatomia Veterinaria Interactiva</Text>
 
         <View style={s.statsRow}>
           <View style={s.stat}><Text style={s.statNum}>{horse.totalBones}</Text><Text style={s.statLabel}>Huesos</Text></View>
@@ -52,8 +52,8 @@ export default function HomeScreen() {
 
 const s = StyleSheet.create({
   content: { padding: 16, paddingBottom: 20 },
-  title: { fontSize: 28, fontWeight: 'bold', color: '#fff', textAlign: 'center' },
-  subtitle: { fontSize: 14, color: '#4ECDC4', textAlign: 'center', marginBottom: 20 },
+  logo: { width: '100%', height: 80, marginBottom: 4 },
+  subtitle: { fontSize: 13, color: '#FFEAA7', textAlign: 'center', marginBottom: 18, letterSpacing: 1 },
   statsRow: { flexDirection: 'row', justifyContent: 'space-around', marginBottom: 20 },
   stat: { alignItems: 'center' },
   statNum: { fontSize: 24, fontWeight: 'bold', color: '#4ECDC4' },
