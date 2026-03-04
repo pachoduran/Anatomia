@@ -7,6 +7,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Bone, generateExam, getDivisionBoneNames } from './data';
 import { getLocalImage } from './localImages';
 import { useOrientation } from './useOrientation';
+import { ZoomableImage } from './ZoomableImage';
 
 const COLORS: Record<string, string> = { Rojo: '#FF3333', Azul: '#3366FF', Verde: '#33CC33', Amarillo: '#FFCC00', Naranja: '#FF6600', Morado: '#9933FF' };
 
@@ -69,10 +70,11 @@ export function ExamComponent({ title, subtitle, imageKey, viewKey, questions, d
   const imageSection = (
     <View style={[s.imgCard, isLandscape && { flex: 2, marginBottom: 0, marginRight: 6 }]}>
       <View style={s.imgWrap}>
-        <Image source={getLocalImage(imageKey, viewKey)} style={[s.img, { height: imgHeight }]} contentFit="contain" />
+        <ZoomableImage source={getLocalImage(imageKey, viewKey)} style={[s.img, { height: imgHeight }]}>
         <View style={[s.marker, { left: `${q.x}%`, top: `${q.y}%`, borderColor: c }]}>
           <View style={[s.markerDot, { backgroundColor: c }]} />
         </View>
+        </ZoomableImage>
       </View>
     </View>
   );

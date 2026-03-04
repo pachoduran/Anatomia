@@ -7,6 +7,7 @@ import { getRegion, Bone } from '../../../data';
 import { getLocalImage } from '../../../localImages';
 import { SafeScreen } from '../../../SafeScreen';
 import { useOrientation } from '../../../useOrientation';
+import { ZoomableImage } from '../../../ZoomableImage';
 
 const COLORS: Record<string, string> = { Rojo: '#FF3333', Azul: '#3366FF', Verde: '#33CC33', Amarillo: '#FFCC00', Naranja: '#FF6600', Morado: '#9933FF' };
 
@@ -25,7 +26,7 @@ export default function StudyScreen() {
   const imageSection = (
     <View style={[s.imgCard, isLandscape && { flex: 2, marginBottom: 0, marginRight: 6 }]}>
       <View style={s.imgWrap}>
-        <Image source={getLocalImage(region.imageKey)} style={[s.img, { height: imgHeight }]} contentFit="contain" />
+        <ZoomableImage source={getLocalImage(region.imageKey)} style={[s.img, { height: imgHeight }]}>
         {region.questions.map(b => {
           const c = COLORS[b.color] || '#FF3333';
           return (
@@ -38,6 +39,7 @@ export default function StudyScreen() {
           const c = COLORS[b.color] || '#FF3333'; const l = b.x > 60;
           return <View key={`l${b.id}`} style={[s.label, { left: l ? undefined : `${b.x+4}%`, right: l ? `${100-b.x+4}%` : undefined, top: `${b.y-1}%` }]}><Text style={[s.labelTxt, { color: c }]} numberOfLines={1}>{b.name}</Text></View>;
         })}
+        </ZoomableImage>
       </View>
     </View>
   );
