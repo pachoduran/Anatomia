@@ -69,13 +69,9 @@ export function ExamComponent({ title, subtitle, imageKey, viewKey, questions, d
 
   const imageSection = (
     <View style={[s.imgCard, isLandscape && { flex: 2, marginBottom: 0, marginRight: 6 }]}>
-      <View style={s.imgWrap}>
-        <ZoomableImage source={getLocalImage(imageKey, viewKey)} style={[s.img, { height: imgHeight }]}>
-        <View style={[s.marker, { left: `${q.x}%`, top: `${q.y}%`, borderColor: c }]}>
-          <View style={[s.markerDot, { backgroundColor: c }]} />
-        </View>
-        </ZoomableImage>
-      </View>
+      <ZoomableImage source={getLocalImage(imageKey, viewKey)} style={[s.img, { height: imgHeight }]}>
+        <View style={[s.marker, { left: `${q.x}%`, top: `${q.y}%`, backgroundColor: c }]} />
+      </ZoomableImage>
     </View>
   );
 
@@ -194,10 +190,7 @@ const s = StyleSheet.create({
   scroll: { padding: 10, paddingBottom: 40 },
   landscapeRow: { flex: 1, flexDirection: 'row', padding: 6 },
   imgCard: { backgroundColor: '#0f1629', borderRadius: 10, overflow: 'hidden', marginBottom: 8 },
-  imgWrap: { position: 'relative', backgroundColor: '#fff' },
-  img: { width: '100%', height: 220 },
-  marker: { position: 'absolute', width: 36, height: 36, borderRadius: 18, borderWidth: 4, marginLeft: -18, marginTop: -18, justifyContent: 'center', alignItems: 'center', zIndex: 10, backgroundColor: 'rgba(255,255,255,0.2)' },
-  markerDot: { width: 12, height: 12, borderRadius: 6 },
+  marker: { position: 'absolute', width: 14, height: 14, borderRadius: 7, marginLeft: -7, marginTop: -7, zIndex: 10, borderWidth: 2, borderColor: '#fff' },
   hint: { flexDirection: 'row', alignItems: 'center', marginBottom: 4 },
   hintDot: { width: 10, height: 10, borderRadius: 5, marginRight: 8 },
   hintTxt: { color: '#ccc', fontSize: 13 },

@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
-import { Image } from 'expo-image';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { getView, getRegion, Bone } from '../../../../data';
@@ -17,7 +16,6 @@ export default function StudyViewScreen() {
   const view = getView(animalId!, divisionId!, regionId!, viewId!);
   const region = getRegion(animalId!, divisionId!, regionId!);
   const [selected, setSelected] = useState<Bone | null>(null);
-  const [showLabels, setShowLabels] = useState(true);
   const { isLandscape, height } = useOrientation();
 
   if (!view || !region) return <View style={s.center}><Text style={s.err}>No encontrado</Text></View>;
@@ -26,29 +24,18 @@ export default function StudyViewScreen() {
 
   const imageSection = (
     <View style={[s.imgCard, isLandscape && { flex: 2, marginBottom: 0, marginRight: 6 }]}>
-      <View style={s.imgWrap}>
-        <ZoomableImage source={getLocalImage(regionId!, viewId!)} style={[s.img, { height: imgHeight }]}>
-        {view.questions.map(b => {
-          const c = COLORS[b.color] || '#FF3333';
-          return (
-            <TouchableOpacity key={b.id} style={[s.marker, { left: `${b.x}%`, top: `${b.y}%`, borderColor: c, backgroundColor: selected?.id === b.id ? `${c}60` : `${c}30` }]} onPress={() => setSelected(selected?.id === b.id ? null : b)}>
-              <View style={[s.dot, { backgroundColor: c }]} />
-            </TouchableOpacity>
-          );
-        })}
-        {showLabels && view.questions.map(b => {
-          const c = COLORS[b.color] || '#FF3333'; const l = b.x > 60;
-          return <View key={`l${b.id}`} style={[s.label, { left: l ? undefined : `${b.x+4}%`, right: l ? `${100-b.x+4}%` : undefined, top: `${b.y-1}%` }]}><Text style={[s.labelTxt, { color: c }]} numberOfLines={1}>{b.name}</Text></View>;
-        })}
-        </ZoomableImage>
-      </View>
+      <ZoomableImage source={getLocalImage(regionId!, viewId!)} style={{ height: imgHeight }}>
+        {selected && (
+          <View style={[s.marker, { left: `${selected.x}%`, top: `${selected.y}%`, backgroundColor: COLORS[selected.color] || '#FF3333' }]} />
+        )}
+      </ZoomableImage>
     </View>
   );
 
   const listSection = (
     <ScrollView style={isLandscape ? { flex: 1 } : undefined} contentContainerStyle={isLandscape ? { paddingBottom: 10 } : undefined}>
       {selected && (
-        <View style={[s.detail, { borderLeftColor: COLORS[selected.color] || '#FF3333' }, isLandscape && { padding: 8 }]}>
+        <View style={[s.detail, { borderLeftColor: COLORS[selected.color] || '#FF3333' }]}>
           <View style={s.detailRow}><View style={[s.detailDot, { backgroundColor: COLORS[selected.color] }]} /><Text style={[s.detailName, isLandscape && { fontSize: 13 }]}>{selected.name}</Text>{selected.qty > 1 && <Text style={s.qty}>x{selected.qty}</Text>}</View>
           <Text style={[s.detailDesc, isLandscape && { fontSize: 11 }]}>{selected.desc}</Text>
         </View>
@@ -75,9 +62,7 @@ export default function StudyViewScreen() {
       <View style={s.header}>
         <TouchableOpacity style={s.backBtn} onPress={() => router.back()}><Ionicons name="arrow-back" size={22} color="#fff" /></TouchableOpacity>
         <View style={s.hCenter}><Text style={s.hTitle}>{view.name}</Text><Text style={s.hSub}>{region.name} - Estudio</Text></View>
-        <TouchableOpacity style={[s.toggle, showLabels && s.toggleOn]} onPress={() => setShowLabels(!showLabels)}>
-          <Ionicons name={showLabels ? 'eye' : 'eye-off'} size={18} color={showLabels ? '#1a1a2e' : '#888'} />
-        </TouchableOpacity>
+        <View style={{ width: 36 }} />
       </View>
       {isLandscape ? (
         <View style={s.landscapeRow}>{imageSection}{listSection}</View>
@@ -102,7 +87,7 @@ export default function StudyViewScreen() {
             );
           })}
           <TouchableOpacity style={s.examBtn} onPress={() => router.replace(`/exam-view/${animalId}/${divisionId}/${regionId}/${viewId}`)}>
-            <Ionicons name="school-outline" size={18} color="#fff" /><Text style={s.examTxt}>Examen de esta Vista</Text>
+            <Ionicons name="school-outline" size={18} color="#fff" /><Text style={s.examTxt}>Examen</Text>
           </TouchableOpacity>
         </ScrollView>
       )}
@@ -116,17 +101,10 @@ const s = StyleSheet.create({
   header: { flexDirection: 'row', alignItems: 'center', padding: 8, borderBottomWidth: 1, borderBottomColor: '#2a2a4a' },
   backBtn: { width: 36, height: 36, borderRadius: 18, backgroundColor: '#16213e', justifyContent: 'center', alignItems: 'center' },
   hCenter: { flex: 1, alignItems: 'center' }, hTitle: { fontSize: 14, fontWeight: 'bold', color: '#fff' }, hSub: { fontSize: 10, color: '#4ECDC4' },
-  toggle: { width: 36, height: 36, borderRadius: 18, backgroundColor: '#16213e', justifyContent: 'center', alignItems: 'center' },
-  toggleOn: { backgroundColor: '#4ECDC4' },
   scroll: { padding: 10, paddingBottom: 40 },
   landscapeRow: { flex: 1, flexDirection: 'row', padding: 6 },
   imgCard: { backgroundColor: '#0f1629', borderRadius: 10, overflow: 'hidden', marginBottom: 10 },
-  imgWrap: { position: 'relative', backgroundColor: '#fff' },
-  img: { width: '100%', height: 280 },
-  marker: { position: 'absolute', width: 32, height: 32, borderRadius: 16, borderWidth: 3, marginLeft: -16, marginTop: -16, justifyContent: 'center', alignItems: 'center', zIndex: 10 },
-  dot: { width: 10, height: 10, borderRadius: 5 },
-  label: { position: 'absolute', zIndex: 5, paddingHorizontal: 3, paddingVertical: 1, backgroundColor: 'rgba(0,0,0,0.65)', borderRadius: 3 },
-  labelTxt: { fontSize: 8, fontWeight: '700' },
+  marker: { position: 'absolute', width: 14, height: 14, borderRadius: 7, marginLeft: -7, marginTop: -7, zIndex: 10, borderWidth: 2, borderColor: '#fff' },
   detail: { backgroundColor: '#16213e', borderRadius: 10, padding: 12, marginBottom: 10, borderLeftWidth: 4 },
   detailRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 4 },
   detailDot: { width: 12, height: 12, borderRadius: 6, marginRight: 8 },
