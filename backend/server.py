@@ -397,3 +397,13 @@ logging.basicConfig(level=logging.INFO)
 @app.on_event("shutdown")
 async def shutdown_db_client():
     client.close()
+
+from fastapi.responses import FileResponse
+import os
+
+@app.get("/api/debug/markers/{filename}")
+async def debug_markers(filename: str):
+    path = os.path.join(os.path.dirname(__file__), filename)
+    if os.path.exists(path):
+        return FileResponse(path)
+    return {"error": "not found"}

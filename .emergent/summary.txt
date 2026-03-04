@@ -1,0 +1,178 @@
+<analysis>**original_problem_statement**:
+The user wants to create a mobile application in Spanish for veterinary students to study the skeletal system of animals, starting with the horse.
+
+**PRODUCT REQUIREMENTS**:
+- The application must be structured hierarchically: Anatomical Divisions -> Regions -> Views.
+- **Study Mode**: Display an image of an anatomical region where a user can select a bone from a list to see its location highlighted on the image.
+- **Quiz Mode**: Present an image with a specific bone highlighted, and the user must identify it from multiple-choice options.
+- **Multi-View System**: Complex regions like the skull must support multiple anatomical views (e.g., Dorsal, Ventral, Lateral), each with its own specific image and data.
+- **Offline First**: The entire application must work completely offline, with all data and images bundled into the app.
+- **Responsive UI**: The UI must adapt correctly to mobile device safe areas and support both portrait and landscape orientations. In landscape, the layout should be roughly 2/3 for the image and 1/3 for controls/text.
+- **Image Zoom**: Users must be able to zoom into the anatomical images using a pinch-to-zoom gesture directly on the study/quiz screens.
+- **Anatomical Dictionary**: Include a glossary of key anatomical terms with definitions and a simple quiz.
+- **Branding**: The app should be named MorphoVet and use a specific logo provided by the user.
+
+**User's preferred language**: Spanish
+
+**what currently exists?**
+The project is a standalone, offline-first mobile application built with Expo (React Native). The backend has been deprecated and is unused. All data (anatomical structures, quiz questions, marker coordinates) and images are bundled locally within the frontend.
+
+- **Data**: All application data is stored in . This includes a massive, detailed dataset for the horse skull, derived from a user-provided PDF.
+- **Images**: All images are stored locally in  and loaded via .
+- **Core Features**: The app includes Quiz Mode, Study Mode, a multi-view system for several regions, an Anatomical Dictionary, and full offline capabilities.
+- **UI**: The app supports both portrait and landscape modes. It uses  for handling device notches and  for pinch-to-zoom on images.
+- **Branding**: The app has been rebranded as MorphoVet with the user's custom logo integrated into the home screen, app icon, and splash screen.
+- **Build Configuration**: The project is configured with  and  to allow the user to build an APK/AAB on their local machine using EAS Build.
+
+**Last working item**:
+- **Last item agent was working**: The user reported that the bone markers in Study Mode were not positioned correctly. The user requested a new interaction model: all bone markers should be visible on the image by default as small dots, and when a user selects a bone from the list, the corresponding dot on the image should double in size. The agent was in the process of implementing this by modifying the study screens (, ) and updating the marker coordinates for the skull's Ventral view.
+- **Status**: IN PROGRESS
+- **Agent Testing Done**: N
+- **Which testing method agent to use?**: screenshot tool. The agent needs to take a screenshot of a study screen (e.g., Vista Ventral of the skull) to verify that all markers are displayed as small dots by default and are correctly positioned.
+- **User Testing Done**: N
+
+**All Pending/In progress Issue list**:
+-   **Issue 1: Implement and Verify New Marker Behavior (P0)**
+-   **Issue 2: Correct Marker Positions for All Anatomical Views (P1)**
+
+**Issues Detail**:
+-   **Issue 1**: Implement and Verify New Marker Behavior
+    -   **Attempted fixes**: The agent updated the marker coordinates for the skull's *ventral view* in . It modified  and  to render all markers by default and apply a larger style to the selected one. New CSS styles (, ) were added.
+    -   **Next debug checklist**:
+        1.  Take a screenshot of the  screen for the skull's ventral view to confirm all markers are visible and correctly placed.
+        2.  Simulate a user selection to confirm that the corresponding marker doubles in size.
+        3.  Verify the same behavior on the  screen for a region without multiple views.
+    -   **Why fix this issue and what will be achieved with the fix?**: This is a critical usability flaw. The core study feature is unusable if the markers are incorrect or the interaction is not what the user expects.
+    -   **Status**: IN PROGRESS
+    -   **Is recurring issue?**: Y
+    -   **Should Test frontend/backend/both after fix?**: Frontend
+    -   **Blocked on other issue**: None
+
+-   **Issue 2**: Correct Marker Positions for All Anatomical Views
+    -   **Attempted fixes**: None. The agent has only corrected the positions for a single view ().
+    -   **Next debug checklist**:
+        1.  Systematically go through each anatomical view defined in .
+        2.  For each view, analyze the corresponding image in  to determine the accurate (x, y) coordinates for every bone marker.
+        3.  Update the coordinates in  for all markers across all views.
+        4.  Visually test each screen to ensure the markers align correctly with the features on the images.
+    -   **Why fix this issue and what will be achieved with the fix?**: To ensure the application is factually correct and usable as a study tool. Incorrect markers make the app misleading.
+    -   **Status**: NOT STARTED
+    -   **Is recurring issue?**: Y
+    -   **Should Test frontend/backend/both after fix?**: Frontend
+    -   **Blocked on other issue**: Issue 1 (Implement and Verify New Marker Behavior)
+
+**In progress Task List**:
+None.
+
+**Upcoming and Future Tasks**
+- **Upcoming Task (P1)**: Implement 3D Model Viewer. The user expressed interest in viewing bones in 3D and rotating them. This would likely involve using a library like  with .
+- **Future Task (P2)**: Expand the application to include other animals.
+- **Future Task (P2)**: Implement a user registration and progress tracking system.
+- **Future Task (P3)**: Delete the obsolete  directory to clean up the project structure.
+
+**Completed work in this session**
+- **Massive Content Expansion**: Added numerous new anatomical regions and views (e.g., Cabeza y Cuello, El Tronco, Extremidades) with ~16 new AI-generated images and updated all data models.
+- **Data Expansion from PDF**: Greatly expanded the skull's anatomical data in all 5 views using a detailed PDF provided by the user.
+- **Landscape Mode**: Implemented a responsive landscape layout for the entire app, with a 2/3 image and 1/3 controls/text ratio.
+- **Image Zoom**: Implemented inline pinch-to-zoom functionality on study and exam images using .
+- **Anatomical Dictionary**: Created a new screen with a glossary of terms and a mini-quiz.
+- **App Branding**: Renamed the app to MorphoVet and integrated the user's logo as the app icon, splash screen, and home screen branding.
+- **EAS Build Configuration**: Set up  and  to enable the user to generate APKs locally, and debugged several build issues with the user.
+- **UI/UX Iterations**:
+    - Refined the study mode marker display logic multiple times based on user feedback.
+    - Fixed layout clipping in landscape mode by correctly applying safe area insets.
+    - Adjusted button layouts in landscape mode to be more compact.
+
+**Earlier issues found/mentioned but not fixed**
+None.
+
+**Known issue recurrence from previous fork**
+- **Issue**: The appearance, positioning, and interaction logic for the bone markers in Study Mode.
+- **Recurrence count**: High (iterated on at least 3-4 times this session).
+- **Status**: IN PROGRESS. This is the focus of the .
+
+**Code Architecture**
+
+
+**Key Technical Concepts**
+- **Frontend Framework**: Expo (React Native)
+- **Routing**:  (file-based)
+- **Architecture**: Offline-first, standalone mobile application.
+- **UI Layout**:  for safe areas, Flexbox for responsive layouts (portrait/landscape).
+- **Interactivity**:  and  for pinch-to-zoom gestures.
+- **Build Process**: EAS (Expo Application Services) for generating Android builds.
+
+**key DB schema**
+- No database is used. All data is structured within TypeScript objects and arrays in .
+
+**changes in tech stack**
+- **Added**: ,  (for zoom).
+- **Added**:  (for build configuration).
+
+**All files of reference**
+- **Data & Logic**:
+    -  (Crucial for all content and marker coordinates)
+    -  (Screen for studying a specific view)
+    -  (Screen for studying a region without views)
+    -  (Shared logic for quiz screens)
+- **UI Components & Hooks**:
+    -  (Handles pinch-to-zoom)
+    -  (Detects landscape/portrait mode)
+- **Configuration**:
+    -  (App name, icons, build settings)
+    -  (EAS build profiles for APK/AAB)
+
+**Areas that need refactoring**:
+- The  directory is obsolete and should be deleted.
+- The marker coordinate system in  is fragile as it relies on hardcoded pixel values. The immediate priority is to fix the existing values, but a future refactor could use relative percentages for more robustness.
+
+**key api endpoints**
+None. The application is fully offline.
+
+**Critical Info for New Agent**
+- **Marker Logic is the Top Priority:** Your immediate task is to finish implementing the user's latest request for the study markers: show all as small dots by default, and enlarge the selected one.
+- **Marker Positions are Incorrect:** This is a major underlying problem. The agent only attempted to fix the coordinates for one view (Ventral Skull). You must assume the coordinates for **all other views are incorrect** and will need to be manually calibrated by analyzing the images. This will be a time-consuming but necessary task to make the app usable.
+- **User Builds APK Locally:** The user is hands-on and builds the APK on their own machine using EAS. Your responsibility is to provide correct, build-ready code and configuration. Do not provide build commands unless asked.
+- **Test All UI in Both Orientations:** Landscape mode is a key feature. All UI changes must be verified in both portrait and landscape to ensure the 2/3 image, 1/3 control layout is maintained and there are no clipping issues.
+
+**documents and test reports created in this job**
+- 
+- 
+- 
+- 
+- Test report from an earlier stage: 
+
+**Last 10 User Messages and any pending HUMAN messages**
+10. **User**: Provided a PDF with much more detailed skull anatomy and requested image zoom. **Status**: **DONE**.
+9.  **User**: Reported issues with the Expo Go QR code. **Status**: **DONE** (Agent fixed Expo tunnel).
+8.  **User**: Stated they have the compiled app (ya compre). **Status**: **Acknowledged**.
+7.  **User**: Provided a screenshot showing cluttered, misaligned markers and requested inline zoom instead of a modal. **Status**: **Partially Addressed**. Agent implemented inline zoom but marker issues persisted.
+6.  **User**: Confirmed the UI is cleaner but markers are still in the wrong places. Proposed a new interaction model: show all dots by default, and have the selected dot grow. **Status**: **IN PROGRESS**. This is the current active task.
+5.  **User**: Asked to download the code to test the landscape mode fix. **Status**: **DONE** (Agent instructed user to save to GitHub).
+4.  **User**: Reported that after building, the landscape buttons were still not organized well. **Status**: **DONE** (Agent fixed the layout).
+3.  **User**: Requested the image be even larger (2/3 of the screen) in landscape. **Status**: **DONE**.
+2.  **User**: Sent screenshots showing content was still being cut off in landscape mode. **Status**: **DONE** (Agent fixed safe area padding).
+1.  **User**: Requested the agent permanently remove the placeholder  from  to simplify their local build process. **Status**: **DONE**.
+
+**Project Health Check:**
+- **Broken**: The core Study Mode feature is functionally broken due to widespread incorrect marker positioning. This is the highest priority issue to resolve.
+- **Mocked**: N/A
+
+**3rd Party Integrations**
+- 
+- 
+- 
+- 
+
+**Testing status**
+- **Testing agent used after significant changes**: YES, but not recently. It was used after a major content update.
+- **Troubleshoot agent used after agent stuck in loop**: NO
+- **Test files created**: None
+- **Known regressions**: The accuracy of marker positions has regressed due to the addition of more detailed data and images without recalibrating coordinates.
+
+**Credentials to test flow:**
+N/A
+
+**What agent forgot to execute**
+- The agent has not yet deleted the obsolete  directory.
+- The agent has not created a comprehensive plan to fix the incorrect marker positions across *all* anatomical views, despite the user's feedback implying it's a global problem. It has only focused on a single view so far.</analysis>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { getRegion, Bone } from '../../../data';
@@ -24,9 +24,19 @@ export default function StudyScreen() {
   const imageSection = (
     <View style={[s.imgCard, isLandscape && { flex: 2, marginBottom: 0, marginRight: 6 }]}>
       <ZoomableImage source={getLocalImage(region.imageKey)} style={{ height: imgHeight }}>
-        {selected && (
-          <View style={[s.marker, { left: `${selected.x}%`, top: `${selected.y}%`, backgroundColor: COLORS[selected.color] || '#FF3333' }]} />
-        )}
+        {region.questions.map(b => {
+          const c = COLORS[b.color] || '#FF3333';
+          const sel = selected?.id === b.id;
+          return (
+            <Pressable
+              key={b.id}
+              data-testid={`marker-${b.id}`}
+              style={[sel ? s.markerBig : s.markerSmall, { left: `${b.x}%`, top: `${b.y}%`, backgroundColor: c }]}
+              onPress={() => setSelected(sel ? null : b)}
+              hitSlop={12}
+            />
+          );
+        })}
       </ZoomableImage>
     </View>
   );
@@ -104,6 +114,8 @@ const s = StyleSheet.create({
   landscapeRow: { flex: 1, flexDirection: 'row', padding: 6 },
   imgCard: { backgroundColor: '#0f1629', borderRadius: 10, overflow: 'hidden', marginBottom: 10 },
   marker: { position: 'absolute', width: 14, height: 14, borderRadius: 7, marginLeft: -7, marginTop: -7, zIndex: 10, borderWidth: 2, borderColor: '#fff' },
+  markerSmall: { position: 'absolute', width: 8, height: 8, borderRadius: 4, marginLeft: -4, marginTop: -4, zIndex: 10, opacity: 0.6 },
+  markerBig: { position: 'absolute', width: 16, height: 16, borderRadius: 8, marginLeft: -8, marginTop: -8, zIndex: 10, borderWidth: 2, borderColor: '#fff' },
   detail: { backgroundColor: '#16213e', borderRadius: 10, padding: 12, marginBottom: 10, borderLeftWidth: 4 },
   detailRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 4 },
   detailDot: { width: 12, height: 12, borderRadius: 6, marginRight: 8 },

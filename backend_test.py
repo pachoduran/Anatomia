@@ -10,7 +10,7 @@ import sys
 from typing import Dict, List, Any
 
 # Base URL from the review request
-BASE_URL = "https://estudio-equino.preview.emergentagent.com"
+BASE_URL = "https://vetskeletons.preview.emergentagent.com"
 
 class VetBonesAPITester:
     def __init__(self):

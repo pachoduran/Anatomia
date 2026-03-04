@@ -69,8 +69,8 @@ export function ExamComponent({ title, subtitle, imageKey, viewKey, questions, d
 
   const imageSection = (
     <View style={[s.imgCard, isLandscape && { flex: 2, marginBottom: 0, marginRight: 6 }]}>
-      <ZoomableImage source={getLocalImage(imageKey, viewKey)} style={[s.img, { height: imgHeight }]}>
-        <View style={[s.marker, { left: `${q.x}%`, top: `${q.y}%`, backgroundColor: c }]} />
+      <ZoomableImage source={getLocalImage(imageKey, viewKey)} style={{ height: imgHeight }}>
+        <View data-testid="exam-marker" style={[s.marker, { left: `${q.x}%`, top: `${q.y}%`, backgroundColor: c }]} />
       </ZoomableImage>
     </View>
   );
