@@ -52,7 +52,7 @@ export default function HomeScreen() {
 
 const s = StyleSheet.create({
   content: { padding: 16, paddingBottom: 20 },
-  logo: { width: '100%', height: 80, marginBottom: 4 },
+  logo: { width: '70%', height: 50, alignSelf: 'center', marginBottom: 4 },
   subtitle: { fontSize: 13, color: '#FFEAA7', textAlign: 'center', marginBottom: 18, letterSpacing: 1 },
   statsRow: { flexDirection: 'row', justifyContent: 'space-around', marginBottom: 20 },
   stat: { alignItems: 'center' },
